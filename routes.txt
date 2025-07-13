@@ -1,0 +1,14 @@
+Routes:
+
+GET: / -> main page
+GET: /food -> lists all foods from DB
+GET: /food/create -> display food creation form
+POST: /food/create -> stores food in database (name param must be send)
+POST: /food/delete -> deletes food from DB (id param must be send)
+
+GET: /users -> lists all users from DB
+GET: /users/create -> display user creation form
+POST: /users/create -> store user in database
+POST /user/delete -> delete user from DB (id param must be send)
+GET: /users/update?id={$id} -> get edit form for user with $id
+POST: /users/update?id={$id} -> update user with $id

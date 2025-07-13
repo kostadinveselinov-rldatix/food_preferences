@@ -1,0 +1,25 @@
+Users table:
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    lastname VARCHAR(255) NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL
+);
+
+Foods table:
+CREATE TABLE foods (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    created_at DATETIME NOT NULL
+);
+
+
+Pivot table:
+CREATE TABLE food_user (
+    user_id INT NOT NULL,
+    food_id INT NOT NULL,
+    PRIMARY KEY (user_id, food_id),
+    CONSTRAINT fk_food_user_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_food_user_food FOREIGN KEY (food_id) REFERENCES foods(id) ON DELETE CASCADE
+);
