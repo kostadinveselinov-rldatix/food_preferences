@@ -12,6 +12,12 @@ services:
       - "8080:80"
     depends_on:
       - db
+      - redis
+      - rabbitmq
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - MESSENGER_TRANSPORT_DSN=redis://redis:6379/messages
+      - DATABASE_URL=mysql://user:secret@db:3306/food_app_db
 
   db:
     image: mysql:8.0
@@ -35,6 +41,41 @@ services:
       PMA_HOST: db
       PMA_USER: root
       PMA_PASSWORD: root
+  
+  redis:
+    image: redis:alpine
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+ 
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"      # For backend communication
+      - "15672:15672"    # RabbitMQ management UI
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+  
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: php-worker
+    depends_on:
+      - redis
+      - rabbitmq
+      - db
+    command: php bin/console messenger:consume async -vv
+    volumes:
+      - .:/var/www
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - MESSENGER_TRANSPORT_DSN=redis://redis:6379/messages
+      - DATABASE_URL=mysql://user:secret@db:3306/food_app_db
 
 volumes:
   db_data:

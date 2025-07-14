@@ -26,7 +26,7 @@ class User
     #[ORM\Column(type: 'datetime', name: 'created_at')]
     private \DateTime $createdAt;
 
-    #[ORM\ManyToMany(targetEntity: \App\Entity\Food::class)]
+    #[ORM\ManyToMany(targetEntity: \App\Entity\Food::class,inversedBy: 'users')]
     #[ORM\JoinTable(name: 'food_user')]
     #[ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id')]
     #[ORM\InverseJoinColumn(name: 'food_id', referencedColumnName: 'id')]
@@ -93,8 +93,27 @@ class User
     public function addFood(Food $food): self
     {
         if (!$this->foods->contains($food)) {
+            $food->addUser($this);
             $this->foods->add($food);
         }
         return $this;
+    }
+
+    public function setFavoriteFoods(Collection $foods): self
+    {
+        $this->foods = $foods;
+        return $this;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'lastname' => $this->getLastname(),
+            'email' => $this->getEmail(),
+            'created_at' => $this->getCreatedAt()->format('Y-m-d H:i:s'),
+            'foods' => array_map(fn(Food $food) => $food->toArray(), $this->getFoods()->toArray())
+        ];
     }
 }
