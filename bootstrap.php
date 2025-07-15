@@ -1,6 +1,5 @@
 <?php
-define('BASE_PATH', dirname(__DIR__) . "/www");
-define("APP_URL", "http://localhost:8080/");
+require_once __DIR__ . "/consts.php";
 
 require_once \BASE_PATH . "/vendor/autoload.php";
 require_once \BASE_PATH . "/cache/redis/RedisUsersCache.php";

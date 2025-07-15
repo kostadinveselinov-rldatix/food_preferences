@@ -1,4 +1,5 @@
 <?php
+error_reporting(E_ALL & ~E_DEPRECATED);
 require_once __DIR__ . '/vendor/autoload.php';
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -16,6 +17,8 @@ $callback = function ($msg) {
 
 $channel->basic_consume('hello', '', false, true, false, false, $callback);
 
-while (count($channel->callbacks)) {
-    $channel->wait();
+try {
+    $channel->consume();
+} catch (\Throwable $exception) {
+    echo $exception->getMessage();
 }
