@@ -43,7 +43,7 @@ class RedisUsersCache implements IUsersCache
         $ttl = 60;
 
         if(!empty($users)){
-            $this->redisClient->set($key, json_encode($users), 'EX', $ttl);
+            $this->redisClient->set($key, serialize($users), 'EX', $ttl);
         }
     }
 
@@ -61,11 +61,14 @@ class RedisUsersCache implements IUsersCache
     public function getUsers(string $key): array | null
     {
         $key = "user_key_" . $key;
-         $loadedFromCache = $this->redisClient->get($key);
+        $loadedFromCache = $this->redisClient->get($key);
+        
         if ($loadedFromCache == null)
+        {
             return null;
+        }
         else {
-            return json_decode($loadedFromCache, true);
+            return unserialize($loadedFromCache);
         }
     }
 

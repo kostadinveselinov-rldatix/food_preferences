@@ -1,25 +1,35 @@
 <?php
-
 namespace App;
-require_once __DIR__ . "/../vendor/autoload.php";
 
-use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
+use Doctrine\DBAL\DriverManager;
 
-$paths = ['./../src/Entity'];
-$isDevMode = true;
+class EntityManagerFactory
+{
+    private static ?EntityManager $entityManager = null;
 
-// the connection configuration
-$dbParams = [
-    'driver'   => 'pdo_mysql',
-    'user'     => 'root',
-    'host' => 'php83-mysql',
-    'password' => 'root',
-    'dbname'   => 'food_app_db',
-];
+    public static function getEntityManager(): EntityManager
+    {
+        if (self::$entityManager === null) {
+            $paths = [__DIR__ . '/../src/Entity'];
+            $isDevMode = true;
 
-$config = ORMSetup::createAttributeMetadataConfiguration($paths, $isDevMode);
+            $dbParams = [
+                'driver'   => 'pdo_mysql',
+                'user'     => 'root',
+                'host'     => 'php83-mysql',
+                'password' => 'root',
+                'dbname'   => 'food_app_db',
+            ];
 
-$connection = DriverManager::getConnection($dbParams, $config);
-return new EntityManager($connection, $config);
+            $config = ORMSetup::createAttributeMetadataConfiguration($paths, $isDevMode);
+
+            $connection = DriverManager::getConnection($dbParams, $config);
+
+            self::$entityManager = new EntityManager($connection, $config);
+        }
+
+        return self::$entityManager;
+    }
+}

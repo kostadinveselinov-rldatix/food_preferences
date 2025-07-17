@@ -19,8 +19,10 @@ require_once \BASE_PATH . "/public/parts/header.php";
                 .then(response => response.json())
                 .then(response => {
                     console.log(response);
-                    
-                    displayUsers(response.data, UsersDiv);
+                    if(response.status == 200){
+                        displayUsers(response.data, UsersDiv);
+                    }
+
                 })
                 .catch(error => console.error('Error:', error));
         }

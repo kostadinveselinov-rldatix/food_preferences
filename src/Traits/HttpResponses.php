@@ -20,7 +20,6 @@ trait HttpResponses
             'message' => $message,
             'data' => $data
         ]);
-        exit();
     }
 
     public function redirect(string $url, int $statusCode = 302)

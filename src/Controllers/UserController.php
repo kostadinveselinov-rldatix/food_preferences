@@ -1,26 +1,28 @@
 <?php
 namespace App\Controllers;
 
+require_once "/var/www/config/EntityManagerConfig.php";
+
 use Doctrine\ORM\EntityManager;
 use App\Entity\User;
+use App\EntityManagerFactory;
+use App\Repositories\UserRepository;
 
 class UserController
 {
+    private UserRepository $userRepository;
     private EntityManager $entityManager;
 
     public function __construct()
     {
-        $this->entityManager = require \BASE_PATH . '/config/EntityManagerConfig.php';
+        $this->entityManager = EntityManagerFactory::getEntityManager();
+        $this->userRepository = $this->entityManager->getRepository(User::class);
+        $this->userRepository->setRedis(new \App\cache\redis\RedisUsersCache(\getRedisConfig()));
     }
 
     public function index()
     {
-        $users = $this->entityManager->createQueryBuilder()
-            ->select('u',"f")
-            ->from(User::class, 'u')
-            ->leftJoin("u.foods", 'f')
-            ->getQuery()
-            ->getResult();
+        $users = $this->userRepository->findAll();
 
         require_once \BASE_PATH . '/public/user_assets/user.php';
     }
@@ -31,21 +33,9 @@ class UserController
         require_once \BASE_PATH . '/public/user_assets/addUser.php';
     }
 
-    public function addUser(string $name, string $lastName, string $email, array $foodIds)
+    public function addUser(array $data)
     {
-        $user = new User();
-        $user->setName($name);
-        $user->setLastname($lastName);
-        $user->setEmail($email);
-        $user->setCreatedAt(new \DateTime());
-        $foods = $this->entityManager->getRepository(\App\Entity\Food::class)->findBy(['id' => $foodIds]);
-
-        foreach ($foods as $food) {
-            $user->getFoods()->add($food);
-        }
-
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        $user = $this->userRepository->storeUser($data);
 
         header("Location: /users");
         die();
@@ -53,11 +43,7 @@ class UserController
 
     public function delete(int $id)
     {
-        $user = $this->entityManager->getRepository(User::class)->find($id);
-        if (!is_null($user)) {
-            $this->entityManager->remove($user);
-            $this->entityManager->flush();
-        }
+        $this->userRepository->deleteUser($id);
 
         header("Location: /users");
         die();
@@ -65,8 +51,9 @@ class UserController
 
     public function edit(int $id)
     {
-        $user = $this->entityManager->getRepository(User::class)->find($id);
-        if (!$user) {
+        $user = $this->userRepository->findUserById($id);
+
+        if (is_null($user)) {
             header("Location: /users");
             die();
         }
@@ -78,26 +65,9 @@ class UserController
         require_once \BASE_PATH . '/public/user_assets/editUser.php';
     }
 
-    public function update(int $id, string $name, string $lastName, string $email, array $foodIds)
+    public function update(int $id,array $data):void
     {
-        $user = $this->entityManager->getRepository(User::class)->find($id);
-
-        if (is_null($user)) {
-            header("Location: /users");
-            die();
-        }
-
-        $user->setName($name);
-        $user->setLastname($lastName);
-        $user->setEmail($email);
-        $user->getFoods()->clear();
-
-        $foods = $this->entityManager->getRepository(\App\Entity\Food::class)->findBy(['id' => $foodIds]);
-        foreach ($foods as $food) {
-            $user->getFoods()->add($food);
-        }
-
-        $this->entityManager->flush();
+        $this->userRepository->updateUser($id, $data);
 
         header("Location: /users");
         die();

@@ -1,8 +1,11 @@
 <?php
-
 namespace App\Controllers;
+
+require_once "/var/www/config/EntityManagerConfig.php";
+
 use Doctrine\ORM\EntityManager;
 use App\Entity\Food;
+use App\EntityManagerFactory;
 
 class FoodController
 {
@@ -10,7 +13,7 @@ class FoodController
 
     public function __construct()
     {
-        $this->entityManager = require \BASE_PATH . '/config/EntityManagerConfig.php';
+        $this->entityManager = EntityManagerFactory::getEntityManager();
     }
 
     public function index()

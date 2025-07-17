@@ -54,11 +54,10 @@ switch($uri) {
                 $email = trim($_POST['email']);
                 $foods = isset($_POST['foods']) ? $_POST['foods'] : [];
 
+                $data = ["name" => $name,"lastName" => $lastName,"email"=> $email,"foodIds"=> $foods];
+
                 $controller->addUser(
-                    $name = $name,
-                    $lastName = $lastName,
-                    $email = $email,
-                    $foodIds = $foods
+                    $data
                 );
             }
             break;
@@ -82,12 +81,11 @@ switch($uri) {
                 $email = trim($_POST['email']);
                 $foods = isset($_POST['foods']) ? $_POST['foods'] : [];
 
+                $data = ["name" => $name,"lastName" => $lastName,"email"=> $email,"foodIds"=> $foods];
+
                 $controller->update(
-                    $id = $id,
-                    $name = $name,
-                    $lastName = $lastName,
-                    $email = $email,
-                    $foodIds = $foods
+                    id: $id,
+                    data: $data
                 );
             }
             break;

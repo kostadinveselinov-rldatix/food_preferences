@@ -1,14 +1,16 @@
 <?php
 require_once __DIR__ . "/../../bootstrap.php";
 require_once \BASE_PATH . "/src/Entity/Food.php";
+require_once \BASE_PATH . "/config/EntityManagerConfig.php";
 
 use App\Entity\Food;
+use App\EntityManagerFactory;
 
 class  ReportGenerator {
     private $entityManager;
 
     public function __construct(){
-        $this->entityManager = require \BASE_PATH . "/config/EntityManagerConfig.php";
+        $this->entityManager = EntityManagerFactory::getEntityManager();
     }
 
     public function generate(string $time): void {

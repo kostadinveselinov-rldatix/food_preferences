@@ -4,9 +4,11 @@ namespace App\Entity;
 use \Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
+use App\Repositories\UserRepository;
 
-#[ORM\Entity]
+
 #[ORM\Table(name: 'users')]
+#[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
 {
     #[ORM\Id]
@@ -115,5 +117,10 @@ class User
             'created_at' => $this->getCreatedAt()->format('Y-m-d H:i:s'),
             'foods' => array_map(fn(Food $food) => $food->toArray(), $this->getFoods()->toArray())
         ];
+    }
+
+    public function jsonSerialize()
+    {
+        return $this->toArray();
     }
 }

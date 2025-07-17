@@ -74,4 +74,8 @@ class Food{
     {
         return $this->users;
     }
+    
+    public function jsonSerialize(){
+        return $this->toArray();
+    }
 }
