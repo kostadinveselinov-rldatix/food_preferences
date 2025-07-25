@@ -1,11 +1,10 @@
 <?php
 namespace App\ApiControllers;
 require_once \BASE_PATH . "/bootstrap.php";
-require_once \BASE_PATH ."/config/EntityManagerConfig.php";
 
 use App\Repositories\UserRepository;
 use App\Entity\User;
-use App\EntityManagerFactory;
+use App\config\EntityManagerFactory;
 class ApiUserController
 {
     use \App\Traits\HttpResponses;

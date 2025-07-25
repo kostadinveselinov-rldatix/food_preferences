@@ -4,7 +4,7 @@ services:
   app:
     build:
       context: .
-      dockerfile: Dockerfile   # ⬅️ Use your custom Dockerfile
+      dockerfile: Dockerfile
     container_name: php-food-app
     volumes:
       - .:/var/www

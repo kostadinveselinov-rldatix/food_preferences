@@ -1,6 +1,5 @@
 <?php
 namespace App\cache\redis;
-require_once \BASE_PATH . "/src/Entity/User.php";
 
 use \App\Entity\User;
 

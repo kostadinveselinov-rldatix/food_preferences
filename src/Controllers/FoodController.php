@@ -1,11 +1,9 @@
 <?php
 namespace App\Controllers;
 
-require_once "/var/www/config/EntityManagerConfig.php";
-
 use Doctrine\ORM\EntityManager;
 use App\Entity\Food;
-use App\EntityManagerFactory;
+use App\config\EntityManagerFactory;
 
 class FoodController
 {
@@ -19,11 +17,11 @@ class FoodController
     public function index()
     {
         $foods = $this->entityManager->getRepository(Food::class)->findAll();
-        require_once __DIR__ . "/../../public/food_assets/food.php";
+        require_once __DIR__ . "/../../public/food_views/food.php";
     }
 
     public function create(){
-        require_once __DIR__ . "/../../public/food_assets/addFood.php";
+        require_once __DIR__ . "/../../public/food_views/addFood.php";
     }
 
     public function addFood(string $name)

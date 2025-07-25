@@ -1,11 +1,9 @@
 <?php
 namespace App\Controllers;
 
-require_once "/var/www/config/EntityManagerConfig.php";
-
 use Doctrine\ORM\EntityManager;
 use App\Entity\User;
-use App\EntityManagerFactory;
+use App\config\EntityManagerFactory;
 use App\Repositories\UserRepository;
 
 class UserController
@@ -24,13 +22,15 @@ class UserController
     {
         $users = $this->userRepository->findAll();
 
-        require_once \BASE_PATH . '/public/user_assets/user.php';
+        // var_dump($users);
+
+        require_once \BASE_PATH . '/public/user_views/user.php';
     }
 
     public function create()
     {
         $foods = $this->entityManager->getRepository(\App\Entity\Food::class)->findAll();
-        require_once \BASE_PATH . '/public/user_assets/addUser.php';
+        require_once \BASE_PATH . '/public/user_views/addUser.php';
     }
 
     public function addUser(array $data)
@@ -62,7 +62,7 @@ class UserController
         $userFoodIds = array_map(fn($food) => $food->getId(), $userFoods);
 
         $foods = $this->entityManager->getRepository(\App\Entity\Food::class)->findAll();
-        require_once \BASE_PATH . '/public/user_assets/editUser.php';
+        require_once \BASE_PATH . '/public/user_views/editUser.php';
     }
 
     public function update(int $id,array $data):void

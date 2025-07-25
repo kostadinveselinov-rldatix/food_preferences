@@ -1,5 +1,5 @@
 <?php
-namespace App;
+namespace App\config;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
@@ -12,7 +12,7 @@ class EntityManagerFactory
     public static function getEntityManager(): EntityManager
     {
         if (self::$entityManager === null) {
-            $paths = [__DIR__ . '/../src/Entity'];
+            $paths = [__DIR__ . '/../Entity'];
             $isDevMode = true;
 
             $dbParams = [

@@ -1,10 +1,8 @@
 <?php
 require_once __DIR__ . "/../../bootstrap.php";
-require_once \BASE_PATH . "/src/Entity/Food.php";
-require_once \BASE_PATH . "/config/EntityManagerConfig.php";
 
 use App\Entity\Food;
-use App\EntityManagerFactory;
+use App\config\EntityManagerFactory;
 
 class  ReportGenerator {
     private $entityManager;
@@ -14,6 +12,7 @@ class  ReportGenerator {
     }
 
     public function generate(string $time): void {
+        $this->entityManager->clear();
         $foodRepo = $this->entityManager->getRepository(Food::class);
         $foods = $foodRepo->findAll();
 

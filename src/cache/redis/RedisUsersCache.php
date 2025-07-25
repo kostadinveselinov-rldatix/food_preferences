@@ -2,14 +2,10 @@
 
 namespace App\cache\redis;
 
-require_once \BASE_PATH . "/src/Entity/User.php";
-require_once \BASE_PATH . "/vendor/autoload.php";
-require_once \BASE_PATH . "/cache/redis/IUsersCache.php";
-
 use App\cache\redis\IUsersCache;
 use \App\Entity\User;
 use \Predis\Client as PredisClient;
-use \App\configuration\RedisConfiguration;
+use \App\config\RedisConfiguration;
 
 class RedisUsersCache implements IUsersCache
 {

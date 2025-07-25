@@ -5,8 +5,7 @@ namespace App\Repositories;
 use App\cache\redis\IUsersCache;
 use Doctrine\ORM\EntityRepository;
 use App\Entity\User;
-use Doctrine\Persistence\ManagerRegistry;
-use Redis;
+
 
 class UserRepository extends EntityRepository
 {
