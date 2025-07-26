@@ -38,3 +38,7 @@ COPY xdebug.ini /usr/local/etc/php/conf.d/
 
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+RUN composer install
+
+RUN mkdir /var/www/src/reports
