@@ -28,7 +28,10 @@ RUN update-ca-certificates
 
 RUN pecl install redis && docker-php-ext-enable redis \
     && pecl install xdebug \
-    && docker-php-ext-enable xdebug
+    && docker-php-ext-enable xdebug 
+    
+RUN apt-get install -y libxml2-dev \
+    && docker-php-ext-install dom
 
 RUN docker-php-ext-install bcmath
 
@@ -41,4 +44,4 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 RUN composer install
 
-RUN mkdir /var/www/src/reports
+RUN mkdir -p /var/www/src/reports

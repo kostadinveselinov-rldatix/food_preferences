@@ -23,17 +23,10 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['report_name'])) {
         exit;
     }
 }
-?>
 
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Download Your Reports</title>
-</head>
-<body>
-    <h2>Your Available Reports</h2>
+require_once BASE_PATH . "/public/parts/header.php";
+require_once BASE_PATH . "/public/parts/header.php";
 
-    <?php
     $reports = $_SESSION['reports'] ?? [];
     $foundAny = false;
 

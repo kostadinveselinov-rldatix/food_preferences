@@ -2,3 +2,4 @@
 /vendor
 /src/reports/*
 /profiler/
+.phpunit.cache

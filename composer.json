@@ -4,7 +4,8 @@
         "doctrine/dbal": "^4",
         "symfony/cache": "^7",
         "predis/predis": "^3.0",
-        "php-amqplib/php-amqplib": "^3.2"
+        "php-amqplib/php-amqplib": "^3.2",
+        "php-di/php-di": "^7.0"
     },
     "autoload": {
       "psr-4": {
@@ -12,6 +13,7 @@
       }
   },
     "require-dev": {
-        "phpstan/phpstan-phpunit": "^2.0"
+        "phpstan/phpstan-phpunit": "^2.0",
+        "phpunit/phpunit": "^12"
     }
 }

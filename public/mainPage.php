@@ -3,7 +3,7 @@
 require_once \BASE_PATH . "/public/parts/header.php";
 ?>
 <div>
-    <h2>Welcome to food preference app.</h2>
+    <h2>Welcome to food preference app. <?= gethostname() ?></h2>
     <h3>Search users by name</h3>
     <input type="text" id="searchInput" placeholder="Ex. John">
     <ol id="displayUsers"></ol>
