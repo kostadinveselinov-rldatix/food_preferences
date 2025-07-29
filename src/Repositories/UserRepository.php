@@ -13,9 +13,7 @@ class UserRepository extends EntityRepository
 
     public function setRedis(IUsersCache $redis)
     {
-        if(!isset($this->redis)){
-            $this->redis = $redis;
-        }
+        $this->redis = $redis;
     }
 
     public function findUserById(int $id, bool $fetchFromCache = true,bool $fetchFood = true):?User

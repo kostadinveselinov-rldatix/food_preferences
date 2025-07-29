@@ -5,23 +5,15 @@ namespace App\cache\redis;
 use App\cache\redis\IUsersCache;
 use \App\Entity\User;
 use \Predis\Client as PredisClient;
-use \App\config\RedisConfiguration;
 
 class RedisUsersCache implements IUsersCache
 {
-
     private PredisClient $redisClient;
 
-    public function __construct(RedisConfiguration $redisConfiguration)
+    public function __construct(PredisClient $client)
     {
 
-        $this->redisClient = new PredisClient([
-            'scheme' => 'tcp',
-            'host' => $redisConfiguration->databaseHost,
-            'port' => $redisConfiguration->databasePort,
-            'password' => '',
-            'database' => 0,
-        ]);
+        $this->redisClient = $client;
     }
 
     public function storeUser(User $user): void

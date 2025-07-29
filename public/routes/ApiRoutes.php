@@ -6,7 +6,7 @@ use \App\ApiControllers\ApiUserController;
 
 switch($uri){
     case "/api/users":
-        $controller = new ApiUserController();
+        $controller = $container->get(ApiUserController::class);
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             echo $controller->index();
         } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -16,7 +16,7 @@ switch($uri){
         }
         break;
     case "/api/user":
-        $controller = new ApiUserController();
+        $controller = $container->get(ApiUserController::class);
     
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     
@@ -56,7 +56,7 @@ switch($uri){
         break;
 
     case "/api/user/delete":
-        $controller = new ApiUserController();
+        $controller = $container->get(ApiUserController::class);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $rawInput = file_get_contents('php://input');
             $data = json_decode($rawInput, true);
@@ -71,7 +71,7 @@ switch($uri){
         }
         break;
     case "/api/user/search":
-        $controller = new ApiUserController();
+        $controller = $container->get(ApiUserController::class);
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             $search = $_GET['searchTerm'] ?? null;
             if (!is_null($search)) {

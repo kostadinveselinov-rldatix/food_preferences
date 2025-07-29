@@ -1,6 +1,7 @@
 <?php
 namespace App;
 require_once __DIR__ . "/../bootstrap.php";
+$container = require_once __DIR__ . "/../src/config/DependencyInjection.php";
 
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);

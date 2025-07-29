@@ -9,13 +9,8 @@ class ApiUserController
 {
     use \App\Traits\HttpResponses;
 
-    private UserRepository $userRepository;
-    private  $entityManager;
-    public function __construct()
+    public function __construct(private UserRepository $userRepository)
     {
-       $this->entityManager = EntityManagerFactory::getEntityManager();
-       $this->userRepository = $this->entityManager->getRepository(User::class);
-       $this->userRepository->setRedis(new \App\cache\redis\RedisUsersCache(\getRedisConfig()));
     }
 
     public function index()
