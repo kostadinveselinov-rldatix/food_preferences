@@ -38,11 +38,11 @@ switch($uri) {
         header("Location: /food");
         break;
     case '/users':
-        $controller = new UserController();
+        $controller = $container->get(UserController::class);
         echo $controller->index();
         break;
     case '/user/create':
-        $controller = new UserController();
+        $controller = $container->get(UserController::class);
 
         if($_SERVER["REQUEST_METHOD"] === 'POST') {
             if(isset($_POST['name']) && !empty($_POST['name']) &&
@@ -67,7 +67,7 @@ switch($uri) {
         break;
 
     case "/user/update":
-        $controller = new UserController();
+        $controller = $container->get(UserController::class);
 
         if($_SERVER["REQUEST_METHOD"] === 'POST') {
             if(isset($_POST['id']) && !empty($_POST['id']) &&
@@ -100,7 +100,7 @@ switch($uri) {
         break;
 
     case "/user/delete":
-        $controller = new UserController();
+        $controller = $container->get(UserController::class);
         if($_SERVER["REQUEST_METHOD"] === 'POST') {
             if(isset($_POST['id']) && !empty($_POST['id'])) {
                 $id = $_POST['id'];

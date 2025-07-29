@@ -8,14 +8,8 @@ use App\Repositories\UserRepository;
 
 class UserController
 {
-    private UserRepository $userRepository;
-    private EntityManager $entityManager;
-
-    public function __construct()
+    public function __construct(private UserRepository $userRepository,private EntityManager $entityManager)
     {
-        $this->entityManager = EntityManagerFactory::getEntityManager();
-        $this->userRepository = $this->entityManager->getRepository(User::class);
-        $this->userRepository->setRedis(new \App\cache\redis\RedisUsersCache(\getRedisConfig()));
     }
 
     public function index()

@@ -4,6 +4,7 @@ use App\ApiControllers\ApiUserController;
 use App\cache\redis\RedisConfiguration;
 use App\cache\redis\RedisUsersCache;
 use App\config\EntityManagerFactory;
+use App\Controllers\UserController;
 use App\Repositories\UserRepository;
 use Predis\Client as PredisClient;
 use function DI\create;
@@ -41,6 +42,10 @@ $definitions = [
 
     ApiUserController::class => DI\autowire()
         ->constructorParameter('userRepository', DI\get(UserRepository::class)),
+
+    UserController::class => DI\autowire()
+        ->constructorParameter('userRepository', DI\get(UserRepository::class))
+        ->constructorParameter('entityManager', EntityManagerFactory::getEntityManager()),
 ];
 
 $containerBuilder = new ContainerBuilder();
