@@ -1,7 +1,5 @@
 <?php
-session_start();
 error_reporting(E_ALL & ~E_DEPRECATED);
-require_once __DIR__ . '/../consts.php';
 require_once \BASE_PATH . '/vendor/autoload.php';
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
@@ -23,7 +21,6 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     exit();
 }
 
-require_once BASE_PATH . "/public/parts/header.php";
-require_once BASE_PATH . "/public/parts/header.php";
+require_once BASE_PATH . "/src/parts/header.php";
 echo '<form method="post"><button type="submit">Generate Report</button></form>';
 

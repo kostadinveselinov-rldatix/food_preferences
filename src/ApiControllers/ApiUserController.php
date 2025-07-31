@@ -5,6 +5,7 @@ require_once \BASE_PATH . "/bootstrap.php";
 use App\Repositories\UserRepository;
 use App\Entity\User;
 use App\config\EntityManagerFactory;
+use App\Validator\Validator;
 class ApiUserController
 {
     use \App\Traits\HttpResponses;
@@ -22,8 +23,26 @@ class ApiUserController
 
     public function create(array $data)
     {
+        $validator = new Validator();
+
+        $rules = [
+            'name' => 'required|string|min:2|max:50',
+            'lastName' => 'required|string|min:2|max:50',
+            'email' => 'required|email',
+            'foodIds' => 'array|numeric_array'
+        ];
+
+        if($validator->validate($data, $rules)){
+            return $this->jsonResponse($validator->getOnlyErrorMessages(),"FIeld validation fails",400);
+        }
+
+        $name = trim($data['name']);
+        $lastName = trim($data['lastName']);
+        $email = trim($data['email']);
+        $foodIds = $data['foodIds'] ?? [];
+
         try{
-            $user = $this->userRepository->storeUser($data);
+            $user = $this->userRepository->storeUser($name, $lastName, $email, $foodIds);
             return $this->jsonResponse(data: $user->toArray(),message: 'User created successfully', statusCode: 201);
         }catch(\Exception $e){
             return $this->errorResponse('Invalid input data', 400);
@@ -40,6 +59,24 @@ class ApiUserController
 
     public function edit(int $id, array $data)
     {
+        $validator = new Validator();
+
+        $rules = [
+            'name' => 'required|string|min:2|max:50',
+            'lastName' => 'required|string|min:2|max:50',
+            'email' => 'required|email',
+        ];
+
+        if(count($data["foodIds"]) > 0){
+            $rules['foodIds'] = 'numeric_array';
+        }else{
+            unset($data['foodIds']);
+        }
+
+        if($validator->validate($data, $rules)){
+            return $this->jsonResponse($validator->getOnlyErrorMessages(),"FIeld validation fails",400);
+        }
+
         $updatedUser = $this->userRepository->updateUser($id, $data);
         if(!is_null($updatedUser)){
             return $this->jsonResponse(data:$updatedUser->toArray(),message: 'User updated successfully');

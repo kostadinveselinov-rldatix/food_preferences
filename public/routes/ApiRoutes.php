@@ -3,15 +3,22 @@ require_once \BASE_PATH . "/bootstrap.php";
 
 require_once \BASE_PATH . "/src/ApiControllers/ApiUserController.php";
 use \App\ApiControllers\ApiUserController;
+use \App\Middleware\ParametersMiddleware;
 
 switch($uri){
     case "/api/users":
         $controller = $container->get(ApiUserController::class);
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
             echo $controller->index();
-        } elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $rawInput = file_get_contents('php://input');
-            $data = json_decode($rawInput, true);
+        } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            
+            $name = isset($_POST['name']) ? trim($_POST['name']) : '';
+            $lastName = isset($_POST['lastName']) ? trim($_POST['lastName']) : '';
+            $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+            $foods = isset($_POST['foods']) ? $_POST['foods'] : [];
+
+            $data = ["name" => $name,"lastName" => $lastName,"email"=> $email,"foodIds"=> $foods];
+
             echo $controller->create($data);
         }
         break;
@@ -34,23 +41,28 @@ switch($uri){
                 echo json_encode(['message' => 'Invalid user ID']);
             }
         }else if($_SERVER['REQUEST_METHOD'] === 'POST'){
-            $rawInput = file_get_contents('php://input');
-            $data = json_decode($rawInput, true);
+            if(!isset($_POST['id'])){
+                echo $controller->errorResponse('ID in body is required', 400);
+                break;
+            }
+            $name = isset($_POST['name']) ? trim($_POST['name']) : '';
+            $lastName = isset($_POST['lastName']) ? trim($_POST['lastName']) : '';
+            $email = isset($_POST['email']) ? trim($_POST['email']) : '';
+            $foods = isset($_POST['foods']) ? $_POST['foods'] : [];
+
+            $data = ["name" => $name,"lastName" => $lastName,"email"=> $email,"foodIds"=> $foods];
+
             if(isset($_GET["id"])){
                 $id = $_GET["id"];
 
-                if($id != $data["id"]){
+                if($id != $_POST["id"]){
                     http_response_code(400);
-                    echo json_encode(['message' => 'ID mismatch']);
+                    echo $controller->errorResponse('ID mismatch!', 400);
                     die();
                 }
-            }else{
-                $id = $data['id'] ?? null;
             }
 
-            if(!is_null($id)){
-                echo $controller->edit($id,$data);
-            }
+            echo $controller->edit($_POST["id"],$data);
         }
         
         break;
@@ -84,7 +96,7 @@ switch($uri){
         break;
     default:
         http_response_code(404);
-        echo json_encode(['message' => 'Not Found']);
+        echo json_encode(['message' => 'Route not Found']);
         break;
 }
 

@@ -84,23 +84,14 @@ class UserRepository extends EntityRepository
         return $users;
     }
 
-    public function storeUser(array $data):User
+    public function storeUser(string $name,string $lastName,string $email,array $foodIds = []):User
     {
-        if (!isset($data['name'], $data['lastName'], $data['email'])) 
-        {
-            throw new \InvalidArgumentException("Missing required fields.");
-        }
-            $name = trim($data['name']);
-            $lastName = trim($data['lastName']);
-            $email = trim($data['email']);
-
             $user = new User();
             $user->setName($name);
             $user->setLastname($lastName);
             $user->setEmail($email);
             $user->setCreatedAt(new \DateTime());
-           
-            $foodIds = $data['foodIds'] ?? [];
+ 
             // add preferenced foods to user
             if(is_array($foodIds) && !empty($foodIds)) {
                 $foods = $this->getEntityManager()->getRepository(\App\Entity\Food::class)->findBy(['id' => $foodIds]);
@@ -126,13 +117,13 @@ class UserRepository extends EntityRepository
         }
 
         if (isset($data['name'])) {
-            $user->setName(trim($data['name']));
+            $user->setName($data['name']);
         }
         if (isset($data['lastName'])) {
-            $user->setLastname(trim($data['lastName']));
+            $user->setLastname($data['lastName']);
         }
         if (isset($data['email'])) {
-            $user->setEmail(trim($data['email']));
+            $user->setEmail($data['email']);
         }
 
         if (isset($data['foodIds']) && is_array($data['foodIds'])) {

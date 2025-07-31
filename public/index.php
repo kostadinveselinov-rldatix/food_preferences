@@ -1,5 +1,6 @@
 <?php
 namespace App;
+session_start();
 require_once __DIR__ . "/../bootstrap.php";
 $container = require_once __DIR__ . "/../src/config/DependencyInjection.php";
 

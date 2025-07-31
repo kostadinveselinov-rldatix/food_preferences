@@ -5,7 +5,7 @@ use Doctrine\ORM\EntityManager;
 use App\Entity\Food;
 use App\config\EntityManagerFactory;
 
-class FoodController
+class FoodController extends BaseController
 {
     private EntityManager $entityManager;
 
@@ -17,11 +17,11 @@ class FoodController
     public function index()
     {
         $foods = $this->entityManager->getRepository(Food::class)->findAll();
-        require_once __DIR__ . "/../../public/food_views/food.php";
+        $this->view("foods","index",["foods" => $foods]);
     }
 
     public function create(){
-        require_once __DIR__ . "/../../public/food_views/addFood.php";
+       $this->view("foods","create");
     }
 
     public function addFood(string $name)

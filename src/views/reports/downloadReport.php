@@ -1,7 +1,4 @@
 <?php
-session_start();
-require_once __DIR__ . "/../consts.php";
-
 // Handle POST download request
 if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['report_name'])) {
     $fileName = basename($_GET['report_name']);
@@ -24,8 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['report_name'])) {
     }
 }
 
-require_once BASE_PATH . "/public/parts/header.php";
-require_once BASE_PATH . "/public/parts/header.php";
+
+require_once BASE_PATH . "/src/parts/header.php";
 
     $reports = $_SESSION['reports'] ?? [];
     $foundAny = false;

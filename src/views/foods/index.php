@@ -5,7 +5,7 @@ if(!isset($foods)){
     die();
 }
 
-require_once __DIR__ . '/../parts/header.php';
+require_once \BASE_PATH . "/src/parts/header.php";
 ?>
     <h1>Available foods:</h1>
     <div>
@@ -36,5 +36,5 @@ require_once __DIR__ . '/../parts/header.php';
    </table>
 
 <?php
-require_once __DIR__ . '/../parts/footer.php';
+require_once \BASE_PATH . "/src/parts/footer.php";
 ?>
