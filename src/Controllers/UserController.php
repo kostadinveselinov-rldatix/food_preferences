@@ -33,7 +33,7 @@ class UserController extends BaseController
             'name' => 'required|string|min:2|max:50',
             'lastName' => 'required|string|min:2|max:50',
             'email' => 'required|email',
-            'foodIds' => 'array|numeric_array'
+            'foodIds' => 'empty|numeric_array'
         ];
 
         if($validator->validate($data, $rules)){
@@ -93,7 +93,7 @@ class UserController extends BaseController
             'name' => 'required|string|min:2|max:50',
             'lastName' => 'required|string|min:2|max:50',
             'email' => 'required|email',
-            'foodIds' => 'numeric_array'
+            'foodIds' => 'empty|numeric_array'
         ];
 
         if($validator->validate($data, $rules)){

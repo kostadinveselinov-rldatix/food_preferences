@@ -26,6 +26,10 @@ class Validator
 
             $rulesArray = explode('|', $ruleString);
             foreach ($rulesArray as $rule) {
+                if($rule == "empty" && empty($data[$field])){
+                    break; // don't check other rules if field can be left empty
+                }
+
                 if ($rule == 'required' && empty($data[$field])) {
                     $this->errors[$field][] = "$field is required.";
                 }
@@ -38,8 +42,12 @@ class Validator
                     $this->errors[$field][] = "$field must be a string.";
                 }
 
-                if($rule == 'array' && !is_array($data[$field])) {
-                    $this->errors[$field][] = "$field must be an array.";
+                if($rule == 'array') {
+                    if(!is_array($data[$field])){
+                        $this->errors[$field][] = "$field must be numeric.";
+                    }else if(count($data[$field]) == 0){
+                        $this->errors[$field][] = "$field array cannot be empty.";
+                    }
                 }
 
                 if($rule == "numeric" && !is_numeric($data[$field])) {
@@ -49,7 +57,7 @@ class Validator
                 if($rule == "numeric_array") {
                     if(!is_array($data[$field])){
                         $this->errors[$field][] = "$field must be an array.";
-                    }else if(!$this->validateIntegerValuesInArray($data[$field])){
+                    }else if(!$this->validateIntegerValuesInArray($data[$field]) || count($data[$field]) == 0){
                         $this->errors[$field][] = "$field must be an array of numeric values.";
                     }
                 }

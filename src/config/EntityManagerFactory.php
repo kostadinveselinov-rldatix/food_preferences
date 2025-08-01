@@ -5,7 +5,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\DBAL\DriverManager;
 
-class EntityManagerFactory
+abstract class EntityManagerFactory
 {
     private static ?EntityManager $entityManager = null;
 

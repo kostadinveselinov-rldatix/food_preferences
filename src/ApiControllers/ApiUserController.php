@@ -29,7 +29,7 @@ class ApiUserController
             'name' => 'required|string|min:2|max:50',
             'lastName' => 'required|string|min:2|max:50',
             'email' => 'required|email',
-            'foodIds' => 'array|numeric_array'
+            'foodIds' => 'empty|numeric_array'
         ];
 
         if($validator->validate($data, $rules)){
@@ -65,13 +65,8 @@ class ApiUserController
             'name' => 'required|string|min:2|max:50',
             'lastName' => 'required|string|min:2|max:50',
             'email' => 'required|email',
+            "foodIds" => "empty|numeric_array"
         ];
-
-        if(count($data["foodIds"]) > 0){
-            $rules['foodIds'] = 'numeric_array';
-        }else{
-            unset($data['foodIds']);
-        }
 
         if($validator->validate($data, $rules)){
             return $this->jsonResponse($validator->getOnlyErrorMessages(),"FIeld validation fails",400);
