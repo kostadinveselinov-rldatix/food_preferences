@@ -68,6 +68,8 @@ services:
     restart: always
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data:/data
  
   rabbitmq:
     image: rabbitmq:3-management
@@ -113,3 +115,4 @@ services:
 
 volumes:
   db_data:
+  redis_data:
