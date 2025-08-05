@@ -9,7 +9,7 @@ use App\Entity\User;
 
 switch($uri) {
     case '':
-        require_once \BASE_PATH . "/public/mainPage.php";
+        require_once \BASE_PATH . "/src/views/mainPage.php";
         break;
     case '/food':
         $controller = new FoodController();

@@ -92,7 +92,7 @@ services:
       - app2
       - rabbitmq
       - db
-    command: php /var/www/public/reportConsumer.php
+    command: php /var/www/src/views/reports/reportConsumer.php
     volumes:
       - .:/var/www
     environment:
