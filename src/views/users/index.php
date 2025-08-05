@@ -13,7 +13,7 @@ require_once \BASE_PATH . '/src/parts/header.php';
     </div>
     <ol>
             <?php foreach ($users as $user): ?>
-                <li>
+                <li style="border-bottom: 1px solid #ccc; padding: 10px;">
                     <div>Name: <?= htmlspecialchars($user->getName()) ?></div>
                     <div>LastName: <?= htmlspecialchars($user->getLastName()) ?></div>
                     <div>Email: <?= htmlspecialchars($user->getEmail()) ?></div>

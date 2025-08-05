@@ -13,5 +13,7 @@
 
         <button type="submit">Add Food</button>
     </form>
+
+    <?php require_once \BASE_PATH . "/src/parts/printErrors.php";?>
 </body>
 </html>

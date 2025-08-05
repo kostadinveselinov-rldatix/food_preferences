@@ -18,12 +18,9 @@ switch($uri) {
     case '/food/create':
         $controller = new FoodController();
         if($_SERVER["REQUEST_METHOD"] === 'POST') {
-            if(isset($_POST['name']) && !empty($_POST['name'])) {
-                if(is_string($_POST["name"]) && (strlen($_POST["name"]) > 0 && strlen($_POST["name"]) < 50)) {
-                    $name = trim($_POST['name']);
-                    $controller->addFood($name);
-                }
-            }
+            $name = isset($_POST["name"]) ? trim($_POST['name']) : "";
+            $controller->addFood($name);
+    
         } else {
             echo $controller->create();
         }
@@ -111,6 +108,10 @@ switch($uri) {
         break;
     case "/report/download":
         require \BASE_PATH . "/src/views/reports/downloadReport.php";
+        break;
+    
+    case "/report/delete":
+        require_once \BASE_PATH . "/src/views/reports/deleteReport.php";
         break;
     default:
         echo "404 Not Found";

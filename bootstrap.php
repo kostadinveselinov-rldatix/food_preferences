@@ -7,15 +7,3 @@ require_once \BASE_PATH . "/vendor/autoload.php";
 
 
 
-function getRedisConfig(): \App\cache\redis\RedisConfiguration
-{
-    return new \App\cache\redis\RedisConfiguration(
-        $scheme = 'tcp',
-        $databaseHost = 'redis',
-        $databasePort = 6379,
-        $password = "",
-        $databaseConnection = 0
-    );
-}
-
-

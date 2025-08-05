@@ -72,7 +72,7 @@ switch($uri){
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $rawInput = file_get_contents('php://input');
             $data = json_decode($rawInput, true);
-            $id = $data['id'] ?? null;
+            $id = $data['id'] ?? $_GET["id"];
           
             if (is_numeric($id)) {
                 echo $controller->delete((int)$id);

@@ -4,6 +4,7 @@ namespace App\Controllers;
 use Doctrine\ORM\EntityManager;
 use App\Entity\Food;
 use App\config\EntityManagerFactory;
+use App\Validator\Validator;
 
 class FoodController extends BaseController
 {
@@ -26,6 +27,17 @@ class FoodController extends BaseController
 
     public function addFood(string $name)
     {
+        $validator = new Validator();
+        $rules = [
+            'name' => 'required|string|min:2|max:20'
+        ];
+
+        if($validator->validate(['name' => $name], $rules)){
+            $_SESSION['errors'] = $validator->getErrors();
+            header("Location: /food/create");
+            die();
+        }
+
         $food = new Food();
         $food->setName($name);
         $food->setCreatedAt(new \DateTime());

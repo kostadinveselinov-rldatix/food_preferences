@@ -5,6 +5,7 @@ declare(ticks=1);
 require_once __DIR__.'/../vendor/autoload.php';
 require_once __DIR__. '/../src/worker/ReportGenerator.php';
 use PhpAmqpLib\Connection\AMQPStreamConnection;
+use App\worker\ReportGenerator;
 
 $host = getenv('RABBITMQ_HOST') ?: 'rabbitmq';
 $port = getenv('RABBITMQ_PORT') ?: 5672;

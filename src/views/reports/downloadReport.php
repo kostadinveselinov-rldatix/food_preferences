@@ -24,15 +24,23 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['report_name'])) {
 
 require_once BASE_PATH . "/src/parts/header.php";
 
-    $reports = $_SESSION['reports'] ?? [];
+    $reports = \App\Session\Session::get('reports') ?? [];
     $foundAny = false;
+
+    var_dump($reports);
 
     foreach ($reports as $key => $reportTimestamp) {
         $fullPath = REPORTS_PATH . '/report_' . $reportTimestamp . ".csv";
 
         if (file_exists($fullPath)) {
             $foundAny = true;
-            echo "<a href='". \APP_URL . "report/download?report_name=report_" . $reportTimestamp . "'>Download report - report_{$reportTimestamp}</a> <br />";
+            echo "<a href='". \APP_URL . "report/download?report_name=report_" . $reportTimestamp . "'>Download report - report_{$reportTimestamp}</a>";
+            echo "<form method='POST' action='". \APP_URL . "report/delete'>
+                <input type='hidden' name='report_name' value='{$reportTimestamp}'>
+                <button type='submit'>Delete report</button>
+            </form>
+            <hr />
+                ";
         }
     }
 

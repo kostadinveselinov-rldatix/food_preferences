@@ -4,10 +4,7 @@ require_once \BASE_PATH . '/vendor/autoload.php';
 
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
-
-if(!isset($_SESSION["reports"])){
-    $_SESSION["reports"] = [];
-}
+use App\Session\Session;
 
 if($_SERVER['REQUEST_METHOD']==='POST'){
     $conn=new AMQPStreamConnection("rabbitmq",5672,"guest","guest");
@@ -16,7 +13,8 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 
     $timeMessage = time();
     $ch->basic_publish(new AMQPMessage(json_encode(['request_time'=>$timeMessage])), '', 'report_queue');
-    $_SESSION["reports"][] = $timeMessage;
+    Session::addToArray('reports', $timeMessage);
+    
     header("Location: /report/download");
     exit();
 }

@@ -1,6 +1,10 @@
 # Base PHP image with Apache
 FROM php:8.3-apache
 
+# Create a user with UID 1000 and GID 1000 (if not already exists)
+RUN groupadd -g 1000 appgroup && \
+    useradd -m -u 1000 -g 1000 appuser
+
 # Copy Zscaler certificate
 COPY Zscaler.pem /usr/local/share/ca-certificates/Zscaler.crt
 
@@ -44,4 +48,8 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 RUN composer install
 
+# Switch to that user (so PHP runs as appuser with UID 1000)
+USER appuser
+
 RUN mkdir -p /var/www/src/reports
+

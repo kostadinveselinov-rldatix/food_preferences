@@ -1,11 +1,13 @@
 <?php
+namespace App\worker;
 require_once __DIR__ . "/../../bootstrap.php";
 
 use App\Entity\Food;
 use App\config\EntityManagerFactory;
 
-class  ReportGenerator {
+class ReportGenerator {
     private $entityManager;
+    private $filePath =  \BASE_PATH . "/src/reports/";
 
     public function __construct(){
         $this->entityManager = EntityManagerFactory::getEntityManager();
@@ -16,7 +18,7 @@ class  ReportGenerator {
         $foodRepo = $this->entityManager->getRepository(Food::class);
         $foods = $foodRepo->findAll();
 
-        $csvPath = \BASE_PATH . "/src/reports/report_{$time}.csv";
+        $csvPath = $this->filePath . "report_{$time}.csv";
         $fp = fopen($csvPath, 'w');
 
         fputcsv($fp, ['Food', 'People']);
@@ -34,5 +36,15 @@ class  ReportGenerator {
         }
 
         fclose($fp);
+    }
+
+    public function deleteReport(string $fileName): bool {
+        $csvPath = $this->filePath . "report_{$fileName}.csv";
+
+        if(file_exists($csvPath)){
+            return unlink($csvPath);
+        } else {
+            return false;
+        }
     }
 }
