@@ -6,9 +6,11 @@ use App\cache\redis\RedisUsersCache;
 use App\config\EntityManagerFactory;
 use App\Controllers\UserController;
 use App\Repositories\UserRepository;
+use App\cache\redis\LimiterCache;
 use Predis\Client as PredisClient;
 use function DI\create;
 use \DI\ContainerBuilder;
+use App\Middlewares\RateLimiter;
 
 
 $definitions = [
@@ -28,6 +30,17 @@ $definitions = [
         ]);
     },
 
+    LimiterCache::class => DI\autowire()
+        ->constructorParameter('client', DI\get(PredisClient::class))
+        ->constructorParameter('expireTime', 30),
+
+    RateLimiter::class => function (\Psr\Container\ContainerInterface $c) {
+        return new RateLimiter(
+            $c->get(\App\cache\redis\LimiterCache::class),
+            20,
+        );
+    },
+
     RedisUsersCache::class => DI\autowire(),
 
     UserRepository::class => function (\Psr\Container\ContainerInterface $c) {
@@ -39,7 +52,7 @@ $definitions = [
 
         return $repo;
     },
-
+    
     ApiUserController::class => DI\autowire()
         ->constructorParameter('userRepository', DI\get(UserRepository::class)),
 

@@ -73,4 +73,10 @@ abstract class Session
         return false;
     }
 
+    public static function getCurrentSessionId(): string
+    {
+        self::startSession();
+        return session_id();
+    }
+
 }

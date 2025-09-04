@@ -4,6 +4,17 @@ require_once \BASE_PATH . "/bootstrap.php";
 require_once \BASE_PATH . "/src/ApiControllers/ApiUserController.php";
 use \App\ApiControllers\ApiUserController;
 use \App\Middleware\ParametersMiddleware;
+use \App\Middlewares\RateLimiter;
+use App\Session\Session;
+
+$rateLimiter = $container->get(RateLimiter::class);
+
+if($rateLimiter->isRateLimited(Session::getCurrentSessionId())) {
+    http_response_code(429);
+    header('Content-Type: application/json');
+    echo json_encode(['status' => 429, 'message' => 'Too Many Requests. Please try again later.']);
+    die();
+}
 
 switch($uri){
     case "/api/users":

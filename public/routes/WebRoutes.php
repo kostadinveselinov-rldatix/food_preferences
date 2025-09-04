@@ -6,9 +6,20 @@ require_once \BASE_PATH . "/src/Controllers/UserController.php";
 use \App\Controllers\FoodController;
 use \App\Controllers\UserController;
 use App\Entity\User;
+use App\Middlewares\RateLimiter;
+use App\Session\Session;
+
+$rateLimiter = $container->get(RateLimiter::class);
+
+if($rateLimiter->isRateLimited(Session::getCurrentSessionId())) {
+    echo "Too Many Requests. Please try again later.";
+    die();
+}
 
 switch($uri) {
     case '':
+        echo "Request number: " . $rateLimiter->getCurrentRequests(Session::getCurrentSessionId());
+        echo "Session ID: " . Session::getCurrentSessionId();
         require_once \BASE_PATH . "/src/views/mainPage.php";
         break;
     case '/food':
