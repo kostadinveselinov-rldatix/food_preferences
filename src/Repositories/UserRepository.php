@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\cache\redis\IUsersCache;
+use App\cache\redis\UserCache\IUsersCache;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
@@ -65,6 +65,7 @@ class UserRepository implements UserRepositoryInterface
                 ->select('u', 'f')
                 ->from(User::class, 'u')
                 ->leftJoin('u.foods', 'f')
+                ->orderBy('u.createdAt','DESC')
                 ->getQuery()
                 ->getResult();
             }else{

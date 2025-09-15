@@ -1,8 +1,8 @@
 <?php
 
-namespace App\cache\redis;
+namespace App\cache\redis\UserCache;
 
-use App\cache\redis\IUsersCache;
+use App\cache\redis\UserCache\IUsersCache;
 use \App\Entity\User;
 use \Predis\Client as PredisClient;
 

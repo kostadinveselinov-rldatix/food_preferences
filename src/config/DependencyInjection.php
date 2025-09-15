@@ -2,7 +2,7 @@
 
 use App\ApiControllers\ApiUserController;
 use App\cache\redis\RedisConfiguration;
-use App\cache\redis\RedisUsersCache;
+use App\cache\redis\UserCache\RedisUsersCache;
 use App\config\EntityManagerFactory;
 use App\Controllers\UserController;
 use App\Repositories\UserRepository;
@@ -11,7 +11,6 @@ use Predis\Client as PredisClient;
 use function DI\create;
 use \DI\ContainerBuilder;
 use App\Middlewares\RateLimiter;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityManager;
 
 $definitions = [

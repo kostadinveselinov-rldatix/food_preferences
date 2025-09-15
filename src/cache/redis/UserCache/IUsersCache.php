@@ -1,5 +1,5 @@
 <?php
-namespace App\cache\redis;
+namespace App\cache\redis\UserCache;
 
 use \App\Entity\User;
 
