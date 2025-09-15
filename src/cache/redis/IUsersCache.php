@@ -9,7 +9,9 @@ interface IUsersCache
 
     public function getUser(string $key): ?User;
 
-    public function storeUsers(string $key, array $users): void;
+    public function storeUsers(array $users, string $key): void;
 
     public function getUsers(string $key): array | null;
+
+    public function deleteUser(string $key): void;
 }

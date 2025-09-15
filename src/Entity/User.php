@@ -7,8 +7,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use App\Repositories\UserRepository;
 
 
+#[ORM\Entity]
 #[ORM\Table(name: 'users')]
-#[ORM\Entity(repositoryClass: UserRepository::class)]
 class User
 {
     #[ORM\Id]

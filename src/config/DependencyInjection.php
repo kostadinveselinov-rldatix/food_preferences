@@ -11,7 +11,8 @@ use Predis\Client as PredisClient;
 use function DI\create;
 use \DI\ContainerBuilder;
 use App\Middlewares\RateLimiter;
-
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\EntityManager;
 
 $definitions = [
 
@@ -41,24 +42,20 @@ $definitions = [
         );
     },
 
-    RedisUsersCache::class => DI\autowire(),
+    EntityManager::class => DI\factory([EntityManagerFactory::class, 'getEntityManager']),
 
-    UserRepository::class => function (\Psr\Container\ContainerInterface $c) {
-        $em = EntityManagerFactory::getEntityManager();
+    RedisUsersCache::class => DI\autowire()
+        ->constructorParameter('redisClient', DI\get(PredisClient::class))
+        ->constructorParameter('ttl', 60),
 
-        $repo = $em->getRepository(\App\Entity\User::class);
+    UserRepository::class => DI\autowire()
+        ->constructorParameter('redis', DI\get(RedisUsersCache::class))
+        ->constructorParameter('em', DI\get(EntityManager::class)),
 
-        $repo->setRedis($c->get(RedisUsersCache::class));
-
-        return $repo;
-    },
-    
-    ApiUserController::class => DI\autowire()
-        ->constructorParameter('userRepository', DI\get(UserRepository::class)),
 
     UserController::class => DI\autowire()
         ->constructorParameter('userRepository', DI\get(UserRepository::class))
-        ->constructorParameter('entityManager', EntityManagerFactory::getEntityManager()),
+        ->constructorParameter('entityManager', DI\get(EntityManager::class)),
 ];
 
 $containerBuilder = new ContainerBuilder();

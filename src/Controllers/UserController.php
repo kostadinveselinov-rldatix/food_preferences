@@ -15,7 +15,7 @@ class UserController extends BaseController
 
     public function index()
     {
-        $users = $this->userRepository->findAll();
+        $users = $this->userRepository->findAllUsers(fetchFromCache:true,fetchFood:true);
 
         $this->view("users","index",["users" => $users]);
     }

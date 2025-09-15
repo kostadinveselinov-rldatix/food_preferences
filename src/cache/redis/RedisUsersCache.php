@@ -8,56 +8,65 @@ use \Predis\Client as PredisClient;
 
 class RedisUsersCache implements IUsersCache
 {
-    private PredisClient $redisClient;
-
-    public function __construct(PredisClient $client)
+    private string $keyPrefix = "user_key_";
+    public function __construct(private PredisClient $redisClient, private int $ttl)
     {
-
-        $this->redisClient = $client;
     }
 
     public function storeUser(User $user): void
     {
         if($user->getId() != null) {
-            $key = 'user_key_' . $user->getId();
-            $ttl = 60;
-            $this->redisClient->set($key, serialize($user), 'EX', $ttl);
+            $key = $this->keyPrefix . $user->getId();
+         
+            $this->redisClient->set($key, serialize($user), 'EX', $this->ttl);
+
+            // invalidate cache for all users
+            $this->invalidateAllUsersCache();
         }
     }
 
-    public function storeUsers(string $key,array $users): void
+    public function storeUsers(array $users,string $key = "all"): void
     {
-        $key = 'user_key_' . $key;
-        $ttl = 60;
-
         if(!empty($users)){
-            $this->redisClient->set($key, serialize($users), 'EX', $ttl);
+            $this->redisClient->set($this->keyPrefix . $key, serialize($users), 'EX', $this->ttl);
         }
     }
 
     public function getUser(string $key): ?User
     {
-        $key = 'user_key_' . $key;
+        $key = $this->keyPrefix . $key;
         $loadedFromCache = $this->redisClient->get($key);
         if ($loadedFromCache == null)
+        {
             return null;
-        else {
-            return unserialize($loadedFromCache);
         }
+
+        return unserialize($loadedFromCache);
     }
 
     public function getUsers(string $key): array | null
     {
-        $key = "user_key_" . $key;
+        $key = $this->keyPrefix . $key;
         $loadedFromCache = $this->redisClient->get($key);
         
         if ($loadedFromCache == null)
         {
             return null;
         }
-        else {
-            return unserialize($loadedFromCache);
-        }
+   
+        return unserialize($loadedFromCache);
     }
 
+    public function deleteUser(string $key): void
+    {
+        $this->redisClient->del([$this->keyPrefix . $key]);
+        $this->invalidateAllUsersCache();
+    }
+
+    private function invalidateAllUsersCache(): void
+    {
+        if($this->redisClient->exists($this->keyPrefix . "all")) {
+            $this->redisClient->del([$this->keyPrefix . "all"]);
+        }
+    }
 }
