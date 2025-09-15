@@ -23,11 +23,11 @@ switch($uri) {
         require_once \BASE_PATH . "/src/views/mainPage.php";
         break;
     case '/food':
-        $controller = new FoodController();
+        $controller = $container->get(FoodController::class);
         echo $controller->index();
         break;
     case '/food/create':
-        $controller = new FoodController();
+        $controller = $container->get(FoodController::class);
         if($_SERVER["REQUEST_METHOD"] === 'POST') {
             $name = isset($_POST["name"]) ? trim($_POST['name']) : "";
             $controller->addFood($name);
@@ -37,7 +37,7 @@ switch($uri) {
         }
         break;
     case '/food/delete':
-        $controller = new FoodController();
+        $controller = $container->get(FoodController::class);
         if($_SERVER["REQUEST_METHOD"] === 'POST') {
             if(isset($_POST['id']) && !empty($_POST['id'])) {
                 if(!is_numeric($_POST['id']) || $_POST['id'] <= 0) {

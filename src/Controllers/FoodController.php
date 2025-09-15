@@ -4,20 +4,18 @@ namespace App\Controllers;
 use Doctrine\ORM\EntityManager;
 use App\Entity\Food;
 use App\config\EntityManagerFactory;
+use App\Repositories\FoodRepository;
 use App\Validator\Validator;
 
 class FoodController extends BaseController
 {
-    private EntityManager $entityManager;
-
-    public function __construct()
+    public function __construct(private FoodRepository $foodRepository)
     {
-        $this->entityManager = EntityManagerFactory::getEntityManager();
     }
 
     public function index()
     {
-        $foods = $this->entityManager->getRepository(Food::class)->findAll();
+        $foods = $this->foodRepository->findAllFoods();
         $this->view("foods","index",["foods" => $foods]);
     }
 
@@ -38,22 +36,26 @@ class FoodController extends BaseController
             die();
         }
 
-        $food = new Food();
-        $food->setName($name);
-        $food->setCreatedAt(new \DateTime());
-        $this->entityManager->persist($food);
-        $this->entityManager->flush();
+        $this->foodRepository->storeFood($name);
 
         header("Location: /food");
         die();
     }
 
     public function delete(int $id){
-        $food = $this->entityManager->getRepository(Food::class)->find($id);
-        if (!is_null($food)) {
-            $this->entityManager->remove($food);
-            $this->entityManager->flush();
+        $validator = new Validator();
+        $rules = [
+            'id' => 'required|numeric'
+        ];
+
+        if($validator->validate(['id' => $id], $rules)){
+            $_SESSION['errors'] = $validator->getErrors();
+            header("Location: /food");
+            die();
         }
+
+        $this->foodRepository->deleteFood($id);
+
         
         header("Location: /food");
         die();

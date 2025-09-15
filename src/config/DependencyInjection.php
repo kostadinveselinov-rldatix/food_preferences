@@ -1,6 +1,7 @@
 <?php
 
 use App\ApiControllers\ApiUserController;
+use App\cache\redis\FoodCache\RedisFoodCache;
 use App\cache\redis\RedisConfiguration;
 use App\cache\redis\UserCache\RedisUsersCache;
 use App\config\EntityManagerFactory;
@@ -11,7 +12,9 @@ use Predis\Client as PredisClient;
 use function DI\create;
 use \DI\ContainerBuilder;
 use App\Middlewares\RateLimiter;
+use App\Repositories\FoodRepository;
 use Doctrine\ORM\EntityManager;
+use App\Controllers\FoodController;
 
 $definitions = [
 
@@ -30,10 +33,22 @@ $definitions = [
         ]);
     },
 
+    EntityManager::class => DI\factory([EntityManagerFactory::class, 'getEntityManager']),
+
+    //Cache
     LimiterCache::class => DI\autowire()
         ->constructorParameter('client', DI\get(PredisClient::class))
         ->constructorParameter('expireTime', 30),
 
+    RedisUsersCache::class => DI\autowire()
+        ->constructorParameter('redisClient', DI\get(PredisClient::class))
+        ->constructorParameter('ttl', 60),
+    
+    RedisFoodCache::class => DI\autowire()
+        ->constructorParameter('redisClient', DI\get(PredisClient::class))
+        ->constructorParameter('ttl', 120),
+    
+    //Middlewares
     RateLimiter::class => function (\Psr\Container\ContainerInterface $c) {
         return new RateLimiter(
             $c->get(\App\cache\redis\LimiterCache::class),
@@ -41,20 +56,30 @@ $definitions = [
         );
     },
 
-    EntityManager::class => DI\factory([EntityManagerFactory::class, 'getEntityManager']),
-
-    RedisUsersCache::class => DI\autowire()
-        ->constructorParameter('redisClient', DI\get(PredisClient::class))
-        ->constructorParameter('ttl', 60),
-
+    //Repositories
     UserRepository::class => DI\autowire()
         ->constructorParameter('redis', DI\get(RedisUsersCache::class))
         ->constructorParameter('em', DI\get(EntityManager::class)),
 
+    FoodRepository::class => function (\Psr\Container\ContainerInterface $c) {
+        $em = EntityManagerFactory::getEntityManager();
 
+        $repo = $em->getRepository(\App\Entity\Food::class);
+
+        $repo->setRedis($c->get(RedisFoodCache::class));
+
+        return $repo;
+    },
+
+    //Controllers
     UserController::class => DI\autowire()
         ->constructorParameter('userRepository', DI\get(UserRepository::class))
         ->constructorParameter('entityManager', DI\get(EntityManager::class)),
+    
+    FoodController::class => DI\autowire()
+        ->constructorParameter('foodRepository', DI\get(FoodRepository::class)),
+    
+    ApiUserController::class => DI\autowire(),
 ];
 
 $containerBuilder = new ContainerBuilder();

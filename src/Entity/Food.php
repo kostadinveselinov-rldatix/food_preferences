@@ -1,12 +1,15 @@
 <?php
 
 namespace App\Entity;
+
+use App\Repositories\FoodRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
 
-#[ORM\Entity] 
+
 #[ORM\Table(name: 'foods')]
+#[ORM\Entity(repositoryClass: FoodRepository::class)]
 class Food{
     #[ORM\Id]
     #[ORM\Column(type: 'integer')]
