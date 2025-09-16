@@ -188,4 +188,17 @@ class UserRepository implements UserRepositoryInterface
 
         return $users;
     }
+
+    public function fetchUsersInBatches(int $offset = 0, int $batchSize = 50):array
+    {
+        return $this->em->createQueryBuilder()
+            ->select('u', 'f')
+            ->from(User::class, 'u')
+            ->leftJoin('u.foods', 'f')
+            ->setFirstResult($offset * $batchSize)
+            ->setMaxResults($batchSize)
+            ->orderBy('u.createdAt', 'DESC')
+            ->getQuery()
+            ->getArrayResult(); // fetches them like normal array, so we dont have hydration
+    }
 }

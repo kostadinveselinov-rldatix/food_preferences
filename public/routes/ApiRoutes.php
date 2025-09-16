@@ -20,6 +20,17 @@ switch($uri){
     case "/api/users":
         $controller = $container->get(ApiUserController::class);
         if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+            if(isset($_GET["offset"]) && isset($_GET["limit"])){
+                $offset = (int)$_GET["offset"];
+                $limit = (int)$_GET["limit"];
+
+                if($offset < 0) { $offset = 0; }
+                if($limit <= 0) { $limit = 10; }
+
+                echo $controller->getUsersInBatches($offset, $limit);
+                die();
+            }
+
             echo $controller->index();
         } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             

@@ -21,6 +21,17 @@ class ApiUserController
         return $this->jsonResponse($users, 'Users retrieved successfully');
     }
 
+    public function getUsersInBatches(int $offset = 0, int $limit = 10)
+    {
+        $users = $this->userRepository->fetchUsersInBatches($offset, $limit);
+
+        if (empty($users)) {
+            return $this->jsonResponse([], 'No users found', 404);
+        }
+
+        return $this->jsonResponse($users, 'Users retrieved successfully');
+    }
+
     public function create(array $data)
     {
         $validator = new Validator();
