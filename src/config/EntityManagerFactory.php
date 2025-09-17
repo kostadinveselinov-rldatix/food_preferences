@@ -18,7 +18,7 @@ abstract class EntityManagerFactory
             $dbParams = [
                 'driver'   => 'pdo_mysql',
                 'user'     => 'root',
-                'host'     => 'php83-mysql',
+                'host'     => 'db',
                 'password' => 'root',
                 'dbname'   => 'food_app_db',
             ];

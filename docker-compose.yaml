@@ -18,7 +18,9 @@ services:
     environment:
       - REDIS_URL=redis://redis:6379
       - MESSENGER_TRANSPORT_DSN=redis://redis:6379/messages
-      - DATABASE_URL=mysql://user:secret@db:3306/food_app_db
+      - DATABASE_URL=mysql://root:root@db:3306/food_app_db
+    networks:
+      - backend
     
   app2:
     build:
@@ -37,7 +39,9 @@ services:
     environment:
       - REDIS_URL=redis://redis:6379
       - MESSENGER_TRANSPORT_DSN=redis://redis:6379/messages
-      - DATABASE_URL=mysql://user:secret@db:3306/food_app_db
+      - DATABASE_URL=mysql://root:root@db:3306/food_app_db
+    networks:
+      - backend
 
   db:
     image: mysql:8.0
@@ -50,6 +54,8 @@ services:
       - "3306:3306"
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - backend
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
@@ -61,6 +67,8 @@ services:
       PMA_HOST: db
       PMA_USER: root
       PMA_PASSWORD: root
+    networks:
+      - backend
   
   redis:
     image: redis:alpine
@@ -70,6 +78,8 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - backend
  
   rabbitmq:
     image: rabbitmq:3-management
@@ -81,6 +91,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - backend
   
   worker:
     build:
@@ -101,6 +113,8 @@ services:
       - RABBITMQ_PORT=5672
       - RABBITMQ_USER=guest
       - RABBITMQ_PASSWORD=guest
+    networks:
+      - backend
   
   nginx:
     image: nginx:latest
@@ -112,7 +126,13 @@ services:
     depends_on:
       - app1
       - app2
+    networks:
+      - backend
 
 volumes:
   db_data:
   redis_data:
+
+networks:
+  backend:
+    driver: bridge
