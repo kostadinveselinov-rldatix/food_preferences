@@ -21,6 +21,7 @@ services:
       - DATABASE_URL=mysql://root:root@db:3306/food_app_db
     networks:
       - backend
+    command: ./docker-entrypoint.sh
     
   app2:
     build:
@@ -42,6 +43,7 @@ services:
       - DATABASE_URL=mysql://root:root@db:3306/food_app_db
     networks:
       - backend
+    command: ./docker-entrypoint.sh
 
   db:
     image: mysql:8.0

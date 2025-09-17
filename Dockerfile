@@ -48,6 +48,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 RUN composer install
 
+RUN chmod +x docker-entrypoint.sh && chmod +x wait-for-it.sh
 # Switch to that user (so PHP runs as appuser with UID 1000)
 USER appuser
 

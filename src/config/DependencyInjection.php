@@ -16,11 +16,13 @@ use App\Repositories\FoodRepository;
 use Doctrine\ORM\EntityManager;
 use App\Controllers\FoodController;
 
+require_once __DIR__ . "/../../consts.php";
+
 $definitions = [
 
     // Manually define Redis configuration
     RedisConfiguration::class => create()
-        ->constructor("tcp",'redis', 6379,"",0),
+        ->constructor(REDIS_SCHEME, REDIS_HOST, REDIS_PORT, REDIS_PASSWORD, REDIS_DB_CONNECTION),
 
     PredisClient::class => function (\Psr\Container\ContainerInterface $c) {
         $config = $c->get(RedisConfiguration::class);

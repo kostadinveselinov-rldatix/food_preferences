@@ -5,6 +5,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\ORMSetup;
 use Doctrine\DBAL\DriverManager;
 
+require_once __DIR__ . '/../../consts.php';
+
 abstract class EntityManagerFactory
 {
     private static ?EntityManager $entityManager = null;
@@ -17,10 +19,10 @@ abstract class EntityManagerFactory
 
             $dbParams = [
                 'driver'   => 'pdo_mysql',
-                'user'     => 'root',
-                'host'     => 'db',
-                'password' => 'root',
-                'dbname'   => 'food_app_db',
+                'user'     => DB_USER ?? 'root',
+                'host'     => DB_HOST ?? 'db',
+                'password' => DB_PASSWORD ?? 'root',
+                'dbname'   => DB_NAME ?? 'food_app_db',
             ];
 
             $config = ORMSetup::createAttributeMetadataConfiguration($paths, $isDevMode);
