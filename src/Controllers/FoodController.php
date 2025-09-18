@@ -16,7 +16,12 @@ class FoodController extends BaseController
     public function index()
     {
         $foods = $this->foodRepository->findAllFoods();
-        $this->view("foods","index",["foods" => $foods]);
+        $totalFood = $this->foodRepository->createQueryBuilder("f")
+            ->select("COUNT(f.id)")
+            ->getQuery()
+            ->getSingleScalarResult();
+
+        $this->view("foods","index",["foods" => $foods, "totalItems" => $totalFood]);
     }
 
     public function create(){

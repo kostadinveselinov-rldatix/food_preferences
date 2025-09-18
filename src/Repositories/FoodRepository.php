@@ -34,13 +34,13 @@ class FoodRepository extends EntityRepository
     }
     public function findAllFoods(bool $fetchFromCache = true): array
     {
-        $foods = null;
+        $foods = [];
         if($fetchFromCache)
         {
             $foods = $this->redis->getFoods();
         }
 
-        if(empty($foods) || is_null($foods))
+        if(empty($foods))
         {
             $foods = $this->findAll();
             if(!empty($foods)){
@@ -55,13 +55,14 @@ class FoodRepository extends EntityRepository
         $food = new Food();
         $food->setName($name);
         $food->setCreatedAt(new \DateTime());
+        
+        $foods = $this->redis->getFoods();
+        $foods[] = $food;
+        $this->redis->storeFoods($foods);
 
         $this->getEntityManager()->persist($food);
         $this->getEntityManager()->flush();
 
-        $foods = $this->redis->getFoods();
-        $foods[] = $food;
-        $this->redis->storeFoods($foods);
 
         return $food;
     }

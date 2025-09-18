@@ -7,7 +7,13 @@ if(!isset($foods)){
 
 require_once \BASE_PATH . "/src/parts/header.php";
 ?>
-    <h1>Available foods:</h1>
+    <div style="display:flex; justify-content:space-around; align-items:center">
+        <h2>Available food: ( <?= $totalItems ?> records total)</h2>
+        <form action="/seeders" method="POST">
+            <input type="hidden" name="create_food" value="1" />
+            <button>Generate 10 Food items</button>
+        </form>
+    </div>
     <div>
         <a href="<?= \APP_URL . 'food/create'?>" style="font-size:28px">Add food</a>
     </div>

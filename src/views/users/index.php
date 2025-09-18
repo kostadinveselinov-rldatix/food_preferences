@@ -7,7 +7,13 @@ if(!isset($users)){
 
 require_once \BASE_PATH . '/src/parts/header.php';
 ?>
-    <h2>Available users: ( <?= $totalItems ?> records total)</h2>
+    <div style="display:flex; justify-content:space-around; align-items:center">
+        <h2>Available users: ( <?= $totalItems ?> records total)</h2>
+        <form action="/seeders" method="POST">
+            <input type="hidden" name="create_user" value="1" />
+            <button>Generate 10 Users</button>
+        </form>
+    </div>
     <div>
         <a href="<?= \APP_URL . 'user/create'?>" style="font-size:28px">Add user</a>
     </div>

@@ -124,6 +124,9 @@ switch($uri) {
     case "/report/delete":
         require_once \BASE_PATH . "/src/views/reports/deleteReport.php";
         break;
+    case "/seeders":
+        require_once \BASE_PATH . "/src/seeders/seederProducer.php";
+        break;
     default:
         echo "404 Not Found";
 }
