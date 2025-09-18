@@ -7,9 +7,12 @@ if(!isset($users)){
 
 require_once \BASE_PATH . '/src/parts/header.php';
 ?>
-    <h1>Available users:</h1>
+    <h2>Available users: ( <?= $totalItems ?> records total)</h2>
     <div>
         <a href="<?= \APP_URL . 'user/create'?>" style="font-size:28px">Add user</a>
+    </div>
+    <div>
+        <?php include_once \BASE_PATH . "/src/parts/pagination.php" ?>
     </div>
     <ol>
             <?php foreach ($users as $user): ?>
@@ -21,12 +24,13 @@ require_once \BASE_PATH . '/src/parts/header.php';
                     <div>Foods:
                         <ul>
                             <?php 
-                            if($user->getFoods()->isEmpty())
+                            $userFoods = $user->getFoods();
+                            if(empty($userFoods))
                                 echo "<li>No food preferences</li>";
                             else
 
-                            foreach ($user->getFoods() as $food): ?>
-                                <li><?= htmlspecialchars($food->getName()) ?> (<?= $food->getCreatedAt()->format('F j, Y, g:i a') ?>)</li>
+                            foreach ($userFoods as $food): ?>
+                                <li><?= htmlspecialchars($food->getName()) ?></li>
                             <?php endforeach; ?>
                         </ul>
                     </div>

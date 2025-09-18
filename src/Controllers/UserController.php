@@ -15,14 +15,23 @@ class UserController extends BaseController
 
     public function index()
     {
-        $users = $this->userRepository->findAllUsers(fetchFromCache:true,fetchFood:true);
+        $page = $_GET["page"] ?? 0;
+        $pageSize = $_GET["size"] ?? 10;
 
-        $this->view("users","index",["users" => $users]);
+        $users = $this->userRepository->fetchUsersInBatches($page, $pageSize, true);
+        $totalUsers = $this->userRepository->countAllUsers();
+
+        $this->view("users","index",["users" => $users, "totalItems" => $totalUsers,"currentPage" => $page, "pageSize" => $pageSize]);
     }
 
     public function create()
     {
-        $foods = $this->entityManager->getRepository(\App\Entity\Food::class)->findAll();
+        $foodRepo = $this->entityManager->getRepository(\App\Entity\Food::class);
+        $foods = $foodRepo->createQueryBuilder("f")
+            ->select("f.id","f.name") // don't fetch created_at because It creates object(DateTime) and waists resources and we dont need it here
+            ->getQuery()
+            ->getArrayResult();
+ 
         $this->view("users","create",["foods" => $foods]);
     }
 
@@ -82,7 +91,12 @@ class UserController extends BaseController
         $userFoods = $user->getFoods()->toArray();
         $userFoodIds = array_map(fn($food) => $food->getId(), $userFoods);
 
-        $foods = $this->entityManager->getRepository(\App\Entity\Food::class)->findAll();
+        $foodRepo = $this->entityManager->getRepository(\App\Entity\Food::class);
+        $foods = $foodRepo->createQueryBuilder("f")
+            ->select("f.id","f.name")
+            ->getQuery()
+            ->getArrayResult();
+
         $this->view("users","edit",["user" => $user, "userFoodIds" => $userFoodIds,"foods" => $foods]);
     }
 

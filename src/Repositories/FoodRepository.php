@@ -101,4 +101,12 @@ class FoodRepository extends EntityRepository
         return true;
     }
 
+    public function getAllFoodArray():array
+    {
+        return $this->createQueryBuilder("f")
+            ->select("f")
+            ->getQuery()
+            ->getArrayResult();
+    }
+
 }

@@ -21,12 +21,12 @@
         <br />
 
         <label for="foods">Food Preferences (multiple select):</label>
-        <select name="foods[]" multiple>
+        <select name="foods[]" multiple style="height: 150px; padding:5px 20px 5px 20px; margin-top:10px;">
 
             <?php foreach ($foods as $food): ?>
-                <option value="<?= $food->getId() ?>"
-                <?= (in_array($food->getId(),$userFoodIds))? "selected" : ""?>
-                ><?= $food->getName() ?>
+                <option value="<?= $food["id"] ?>"
+                <?= (in_array($food["id"],$userFoodIds))? "selected" : ""?>
+                ><?= $food["name"]?>
             </option>
             <?php endforeach; ?>
         </select>

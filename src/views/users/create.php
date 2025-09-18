@@ -20,14 +20,14 @@
         <br />
 
         <label for="foods">Food Preferences (multiple select):</label>
-        <select name="foods[]" multiple>
+        <select name="foods[]" multiple style="height: 150px; padding:5px 20px 5px 20px; margin-top:10px;">
 
             <?php foreach ($foods as $food): ?>
-                <option value="<?= $food->getId() ?>"><?= $food->getName() ?></option>
+                <option value="<?= $food["id"] ?>"><?= $food["name"] ?></option>
             <?php endforeach; ?>
         </select>
 
-        <button type="submit">Add User</button>
+        <button type="submit" style="margin:5px;">Add User</button>
     </form>
 
     <?php require_once \BASE_PATH . "/src/parts/printErrors.php";?>

@@ -3,3 +3,4 @@
 /src/reports/*
 /profiler/
 .phpunit.cache
+.consts.php
