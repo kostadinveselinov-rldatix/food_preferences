@@ -27,6 +27,7 @@ class Food{
 
      public function __construct() {
         $this->users = new ArrayCollection();
+        $this->setCreatedAt(new \DateTime());
     }
 
     public function getId(): int|null

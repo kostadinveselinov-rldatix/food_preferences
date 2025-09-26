@@ -18,7 +18,8 @@ class RedisFoodCache implements IFoodCache
     public function storeFoods(array $foods): void
     {
         if(empty($foods)){ return; }
-
+        $oldFoods = $this->getFoods();
+        $foods = array_merge($oldFoods,$foods);
         $this->redisClient->set($this->keyPrefix, serialize($foods), 'EX', $this->ttl);
     }
 
@@ -40,6 +41,13 @@ class RedisFoodCache implements IFoodCache
 
         $filteredFoods = array_filter($foodArray, fn($f) => (int)$f->getId() != (int)$food->getId());
 
-        $this->storeFoods($filteredFoods);
+        $this->redisClient->set($this->keyPrefix, serialize($filteredFoods), 'EX', $this->ttl);
+    }
+
+    public function invalidateAllFoodsCache(): void
+    {
+        if($this->redisClient->exists($this->keyPrefix)) {
+            $this->redisClient->del([$this->keyPrefix]);
+        }
     }
 }

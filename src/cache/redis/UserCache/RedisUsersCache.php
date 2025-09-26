@@ -63,7 +63,7 @@ class RedisUsersCache implements IUsersCache
         $this->invalidateAllUsersCache();
     }
 
-    private function invalidateAllUsersCache(): void
+    public function invalidateAllUsersCache(): void
     {
         if($this->redisClient->exists($this->keyPrefix . "all")) {
             $this->redisClient->del([$this->keyPrefix . "all"]);

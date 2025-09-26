@@ -55,13 +55,11 @@ class FoodRepository extends EntityRepository
         $food = new Food();
         $food->setName($name);
         $food->setCreatedAt(new \DateTime());
-        
-        $foods = $this->redis->getFoods();
-        $foods[] = $food;
-        $this->redis->storeFoods($foods);
 
         $this->getEntityManager()->persist($food);
         $this->getEntityManager()->flush();
+
+        $this->redis->storeFoods([$food]);
 
 
         return $food;
@@ -82,9 +80,7 @@ class FoodRepository extends EntityRepository
         $this->getEntityManager()->persist($food);
         $this->getEntityManager()->flush();
 
-        $foods = $this->redis->getFoods();
-        $foods[] = $food;
-        $this->redis->storeFoods($foods);
+        $this->redis->storeFoods([$food]);
 
         return $food;
     }

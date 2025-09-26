@@ -24,28 +24,54 @@ echo "connected";
 $ch = $conn->channel();
 
 $em = EntityManagerFactory::getEntityManager();
+$emConnection = $em->getConnection();
+$container = require_once __DIR__ . "/../config/DependencyInjection.php";
+$foodRepository = $container->get(\App\Repositories\FoodRepository::class);
 
 $queues = ["create_user", "create_food"];
 
 foreach($queues as $queue) {
     $ch->queue_declare($queue, false, true, false, false);
 
-    $ch->basic_consume($queue, '', false, true, false, false, function($msg) use ($queue, $em) {
+    $ch->basic_consume($queue, '', false, true, false, false, function($msg) use ($queue, $em,$emConnection,$foodRepository,$container) {
         $data = json_decode($msg->getBody(), true)['data'] ?? null;
-        echo "here";
+
         if ($data) {
             echo "Processing message from {$queue}: \n";
             
             if ($queue === "create_user") {
-                foreach($data as $userData)
-                {
-                    createUser($userData, $em);
+                $emConnection->beginTransaction();
+
+                try{
+                    foreach($data as $userData)
+                    {
+                        createUser($userData, $em, false);
+                    }
+                    $em->flush(); // flush once after all
+                    $emConnection->commit();
+
+                    $container->get(\App\cache\redis\UserCache\RedisUsersCache::class)->invalidateAllUsersCache();
+                } catch (\Exception $e) {
+                    $emConnection->rollBack();
+                    echo "Failed to process message from {$queue}: " . $e->getMessage() . "\n";
                 }
+
             } elseif ($queue === "create_food") {
-                foreach($data as $foodData)
-                {
-                    sleep(1);
-                    createFood($foodData, $em);
+                $emConnection->beginTransaction();
+
+                try{
+                    foreach($data as $foodData)
+                    {
+                        createFood($foodData, $em, false);
+                    }
+                    $em->flush();
+                    // foodBulkAdd($data,$em);
+                    $emConnection->commit();
+
+                    $container->get(\App\cache\redis\FoodCache\RedisFoodCache::class)->invalidateAllFoodsCache();
+                } catch (\Exception $e) {
+                    $emConnection->rollBack();
+                    echo "Failed to process message from {$queue}: " . $e->getMessage() . "\n";
                 }
             }
             
@@ -55,7 +81,11 @@ foreach($queues as $queue) {
     });
 }
 
-function createUser(array $data, $em) {
+while ($ch->is_consuming()) {
+    $ch->wait();
+}
+
+function createUser(array $data, $em, $flush = true) {
     $user = new \App\Entity\User();
     $user->setName($data['name']);
     $user->setLastName($data['lastname']);
@@ -72,17 +102,38 @@ function createUser(array $data, $em) {
     }
 
     $em->persist($user);
-    $em->flush();
-
-    echo "User created with ID: " . $user->getId() . "\n";
+    if ($flush) {
+        $em->flush();
+    }
 }
 
-function createFood(array $data, $em) {
-    $food = $em->getRepository(\App\Entity\Food::class)->storeFood($data['name']);
+function createFood(array $data, $em, $flush = true) {
+    $food = new \App\Entity\Food();
+    $food->setName($data['name']);
 
-    echo "Food created with ID: " . $food->getId() . "\n";
+    $em->persist($food);
+    if ($flush) {
+        $em->flush();
+    }
+
 }
 
-while ($ch->is_consuming()) {
-    $ch->wait();
+function foodBulkAdd(array $data, $em){
+    $conn = $em->getConnection();
+
+    if (empty($data)) {
+        return;
+    }
+
+    $values = [];
+    $params = [];
+    foreach ($data as $i => $entry) {
+        $values[] = "(:name{$i})";
+        $params["name{$i}"] = $entry['name'];
+    }
+
+    $query = "INSERT INTO foods (name) VALUES " . implode(", ", $values);
+
+    $stmt = $conn->prepare($query);
+    $stmt->executeStatement($params);
 }
