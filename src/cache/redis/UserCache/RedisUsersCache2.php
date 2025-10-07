@@ -23,7 +23,7 @@ class RedisUsersCache2 implements IUsersCache
     {
         if($user->getId() != null) {
             $key = $this->key . $user->getId();
-            $this->redisClient->set($key, serialize($user), 'EX', $this->ttl);
+            // $this->redisClient->set($key, serialize($user), 'EX', $this->ttl);
 
             $this->redisClient->hset($this->hashKey . "all", $user->getId(), serialize($user));
         }
@@ -50,7 +50,8 @@ class RedisUsersCache2 implements IUsersCache
     public function getUser(string $key): ?User
     {
         
-        $loadedFromCache = $this->redisClient->get($this->key . $key);
+        // $loadedFromCache = $this->redisClient->get($this->key . $key);
+        $loadedFromCache = $this->redisClient->hget($this->hashKey . "all", $key);
         if ($loadedFromCache == null)
         {
             return null;

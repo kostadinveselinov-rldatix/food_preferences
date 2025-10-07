@@ -19,6 +19,7 @@ class UserController extends BaseController
         $pageSize = $_GET["size"] ?? 10;
 
         $users = $this->userRepository->fetchUsersInBatches($page, $pageSize, true);
+        // $users = $this->userRepository->findAllUsers();
         $totalUsers = $this->userRepository->countAllUsers();
 
         $this->view("users","index",["users" => $users, "totalItems" => $totalUsers,"currentPage" => $page, "pageSize" => $pageSize]);

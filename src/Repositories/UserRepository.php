@@ -83,10 +83,13 @@ class UserRepository implements UserRepositoryInterface
     // for API routes because json_encode() cant read private properties from User objects
     public function findAllUsersReturnsArray(bool $fetchFromCache = true,bool $fetchFood = true,string $key = "all"):array
     {
-        $users = $this->findAllUsers($fetchFromCache, $fetchFood, $key);
-        $users = $this->convertUsersObjectsToArray($users);
-
-        return $users;
+        return $this->em->createQueryBuilder()
+                ->select('u', 'f')
+                ->from(User::class, 'u')
+                ->leftJoin('u.foods', 'f')
+                ->orderBy('u.createdAt','DESC')
+                ->getQuery()
+                ->getArrayResult();
     }
 
     public function storeUser(string $name,string $lastName,string $email,array $foodIds = []):User
