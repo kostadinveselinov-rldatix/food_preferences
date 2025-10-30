@@ -22,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "GET" && isset($_GET['report_name'])) {
 }
 
 
-require_once BASE_PATH . "/src/parts/header.php";
+require BASE_PATH . "/src/parts/header.php";
 
     $reports = \App\Session\Session::get('reports') ?? [];
     $foundAny = false;

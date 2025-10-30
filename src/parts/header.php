@@ -6,5 +6,5 @@
     <title>Food preferences app</title>
 </head>
 <body>
-    <?php require_once __DIR__ . "/navigation.php";?>
-    <div style="height: 90vh;">
+    <?php require __DIR__ . "/navigation.php";?>
+    <div style="height: 100%;">

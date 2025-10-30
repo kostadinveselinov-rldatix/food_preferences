@@ -20,4 +20,4 @@ $reportGenerator = new \App\worker\ReportGenerator();
 $reportGenerator->deleteReport($fileName);
 
 header("Location: " . \APP_URL . "report/download");
-die();
+// die();

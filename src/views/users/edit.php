@@ -6,6 +6,15 @@
     <title>Edit User <?= $user->getName()?></title>
 </head>
 <body>
+    <?php
+
+        if(!isset($user)){
+            header("Location: /");
+            // die();
+        }
+
+        require \BASE_PATH . '/src/parts/navigation.php';
+    ?>
     <h1>Edit User <?= $user->getName() . " " . $user->getLastName()?></h1>
     <form action="/user/update" method="POST">
         <label for="name">Name:</label>
@@ -36,6 +45,6 @@
         <button type="submit">Update User</button>
     </form>
 
-     <?php require_once \BASE_PATH . "/src/parts/printErrors.php";?>
+     <?php require \BASE_PATH . "/src/parts/printErrors.php";?>
 </body>
 </html>

@@ -49,7 +49,8 @@ class UserController extends BaseController
         if($validator->validate($data, $rules)){
             $_SESSION['errors'] = $validator->getErrors();
             header("Location: /user/create");
-            die();
+            // die();
+            return;
         }
 
         $user = $this->userRepository->storeUser($data["name"],
@@ -58,7 +59,8 @@ class UserController extends BaseController
             $data["foodIds"] ?? []);
 
         header("Location: /users");
-        die();
+        // die();
+        return;
     }
 
     public function delete(int $id)
@@ -71,13 +73,14 @@ class UserController extends BaseController
          if($validator->validate(["id" => $id], $rules)){
             $_SESSION['errors'] = $validator->getErrors();
             header("Location: /users");
-            die();
+            // die();
+            return;
         }
 
         $this->userRepository->deleteUser($id);
 
         header("Location: /users");
-        die();
+        return;
     }
 
     public function edit(int $id)
@@ -86,7 +89,7 @@ class UserController extends BaseController
 
         if (is_null($user)) {
             header("Location: /users");
-            die();
+            return;
         }
 
         $userFoods = $user->getFoods()->toArray();
@@ -114,12 +117,12 @@ class UserController extends BaseController
         if($validator->validate($data, $rules)){
             $_SESSION['errors'] = $validator->getErrors();
             header("Location: /user/update?id=$id");
-            die();
+            return;
         }
 
         $this->userRepository->updateUser($id, $data);
 
         header("Location: /users");
-        die();
+        return;
     }
 }

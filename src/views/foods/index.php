@@ -2,10 +2,10 @@
 
 if(!isset($foods)){
     header("Location: /");
-    die();
+    // die();
 }
 
-require_once \BASE_PATH . "/src/parts/header.php";
+require \BASE_PATH . "/src/parts/header.php";
 ?>
     <div style="display:flex; justify-content:space-around; align-items:center">
         <h2>Available food: ( <?= $totalItems ?> records total)</h2>
@@ -41,6 +41,4 @@ require_once \BASE_PATH . "/src/parts/header.php";
         </tbody>
    </table>
 
-<?php
-require_once \BASE_PATH . "/src/parts/footer.php";
-?>
+<?php require \BASE_PATH . "/src/parts/footer.php"; ?>

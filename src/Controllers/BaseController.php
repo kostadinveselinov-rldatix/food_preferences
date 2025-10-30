@@ -10,6 +10,6 @@ abstract class BaseController
     public function view(string $folder,string $file,array $vars = [])
     {
         extract($vars);
-        require_once \BASE_PATH . "/src/views/{$folder}/{$file}.php";
+        require \BASE_PATH . "/src/views/{$folder}/{$file}.php";
     }
 }

@@ -1,7 +1,5 @@
 <?php
-require_once \BASE_PATH . "/bootstrap.php";
-require_once \BASE_PATH . "/src/Controllers/FoodController.php";
-require_once \BASE_PATH . "/src/Controllers/UserController.php";
+require \BASE_PATH . "/bootstrap.php";
 
 use \App\Controllers\FoodController;
 use \App\Controllers\UserController;
@@ -13,14 +11,14 @@ $rateLimiter = $container->get(RateLimiter::class);
 
 if($rateLimiter->isRateLimited(Session::getCurrentSessionId())) {
     echo "Too Many Requests. Please try again later.";
-    die();
+    // die();
 }
 
 switch($uri) {
     case '':
         echo "Request number: " . $rateLimiter->getCurrentRequests(Session::getCurrentSessionId());
         echo "Session ID: " . Session::getCurrentSessionId();
-        require_once \BASE_PATH . "/src/views/mainPage.php";
+        require \BASE_PATH . "/src/views/mainPage.php";
         break;
     case '/food':
         $controller = $container->get(FoodController::class);
@@ -42,7 +40,8 @@ switch($uri) {
             if(isset($_POST['id']) && !empty($_POST['id'])) {
                 if(!is_numeric($_POST['id']) || $_POST['id'] <= 0) {
                     header("Location: /food");
-                    die();
+                    // die();
+                    break;
                 }
                 $id = $_POST['id'];
                 $controller->delete($id);
@@ -97,7 +96,8 @@ switch($uri) {
         
         if(!isset($_GET['id']) || empty($_GET['id']) || !is_numeric($_GET['id']) || $_GET['id'] <= 0) {
             header("Location: /users");
-            die();
+            // die();
+            break;
         }
 
         $controller->edit($_GET['id']);
@@ -115,20 +115,20 @@ switch($uri) {
         header("Location: /users");
         break;
     case "/report/create":
-        require_once \BASE_PATH . "/src/views/reports/reportRequest.php";
+        require \BASE_PATH . "/src/views/reports/reportRequest.php";
         break;
     case "/report/download":
         require \BASE_PATH . "/src/views/reports/downloadReport.php";
         break;
     
     case "/report/delete":
-        require_once \BASE_PATH . "/src/views/reports/deleteReport.php";
+        require \BASE_PATH . "/src/views/reports/deleteReport.php";
         break;
     case "/seeders":
-        require_once \BASE_PATH . "/src/seeders/seederProducer.php";
+        require \BASE_PATH . "/src/seeders/seederProducer.php";
         break;
     default:
         echo "404 Not Found";
 }
 
-die();
+// die();

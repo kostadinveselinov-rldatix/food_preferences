@@ -16,9 +16,9 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     Session::addToArray('reports', $timeMessage);
     
     header("Location: /report/download");
-    exit();
+    // exit();
 }
 
-require_once BASE_PATH . "/src/parts/header.php";
+require BASE_PATH . "/src/parts/header.php";
 echo '<form method="post"><button type="submit">Generate Report</button></form>';
 

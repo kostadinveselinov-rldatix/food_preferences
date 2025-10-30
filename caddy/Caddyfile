@@ -1,0 +1,14 @@
+{
+    admin 0.0.0.0:2019
+}
+
+:80 {
+    reverse_proxy app1:80 app2:80 {
+        lb_policy round_robin
+    }
+    
+    log {
+        output stdout
+    }
+}
+

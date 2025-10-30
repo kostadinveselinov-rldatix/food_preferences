@@ -38,13 +38,15 @@ class FoodController extends BaseController
         if($validator->validate(['name' => $name], $rules)){
             $_SESSION['errors'] = $validator->getErrors();
             header("Location: /food/create");
-            die();
+            // die();
+            return;
         }
 
         $this->foodRepository->storeFood($name);
 
         header("Location: /food");
-        die();
+        // die();
+        return;
     }
 
     public function delete(int $id){
@@ -56,13 +58,15 @@ class FoodController extends BaseController
         if($validator->validate(['id' => $id], $rules)){
             $_SESSION['errors'] = $validator->getErrors();
             header("Location: /food");
-            die();
+            // die();
+            return;
         }
 
         $this->foodRepository->deleteFood($id);
 
         
         header("Location: /food");
-        die();
+        // die();
+        return;
     }
 }

@@ -25,7 +25,7 @@ trait HttpResponses
     public function redirect(string $url, int $statusCode = 302)
     {
         header("Location: $url", true, $statusCode);
-        exit();
+        // exit();
     }
 
     public function errorResponse(string $message, int $statusCode = 400)

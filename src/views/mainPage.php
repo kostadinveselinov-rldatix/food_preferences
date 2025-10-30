@@ -1,6 +1,6 @@
 <?php
 
-require_once \BASE_PATH . "/src/parts/header.php";
+require \BASE_PATH . "/src/parts/header.php";
 ?>
 <div>
     <h2>Welcome to food preference app. <?= gethostname() ?></h2>

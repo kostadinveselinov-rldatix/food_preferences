@@ -4,23 +4,24 @@ namespace App\Session;
 
 abstract class Session
 {
-    private static function startSession():void
+    public static function startSession():void
     {
         if (session_status() !== PHP_SESSION_ACTIVE) {
+            error_log("Starting session " . session_status() . " - " . session_id());
             session_start();
         }
     }
 
     public static function set($key, $value)
     {
-        self::startSession();
+        // self::startSession(); not needed because session is started with every new request
 
         $_SESSION[$key] = $value;
     }
 
     public static function addToArray($key,$value)
     {
-        self::startSession();
+        // self::startSession();
 
         if(!isset($_SESSION[$key]) || !is_array($_SESSION[$key])){
             $_SESSION[$key] = [];
@@ -32,14 +33,14 @@ abstract class Session
 
     public static function get($key)
     {
-        self::startSession();
+        // self::startSession();
 
         return isset($_SESSION[$key]) ? $_SESSION[$key] : null;
     }
 
     public static function checkInArray($key,$value):bool
     {
-        self::startSession();
+        // self::startSession();
 
         if(isset($_SESSION[$key]) && is_array($_SESSION[$key]))
         {
@@ -51,7 +52,7 @@ abstract class Session
 
     public static function remove($key)
     {
-        self::startSession();
+        // self::startSession();
 
         if(isset($_SESSION[$key])){
             unset($_SESSION[$key]);
@@ -60,7 +61,7 @@ abstract class Session
 
     public static function removeValueFromArray($key,$value):bool
     {
-        self::startSession();
+        // self::startSession();
 
         if(isset($_SESSION[$key]) && is_array($_SESSION[$key])){
             $keyIndex = array_search($value, $_SESSION[$key]);
@@ -75,7 +76,7 @@ abstract class Session
 
     public static function getCurrentSessionId(): string
     {
-        self::startSession();
+        // self::startSession();
         return session_id();
     }
 

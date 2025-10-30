@@ -2,10 +2,10 @@
 
 if(!isset($users)){
     header("Location: /");
-    die();
+    // die();
 }
 
-require_once \BASE_PATH . '/src/parts/header.php';
+require \BASE_PATH . '/src/parts/header.php';
 ?>
     <div style="display:flex; justify-content:space-around; align-items:center">
         <h2>Available users: ( <?= $totalItems ?> records total)</h2>
@@ -18,7 +18,7 @@ require_once \BASE_PATH . '/src/parts/header.php';
         <a href="<?= \APP_URL . 'user/create'?>" style="font-size:28px">Add user</a>
     </div>
     <div>
-        <?php include_once \BASE_PATH . "/src/parts/pagination.php" ?>
+        <?php include \BASE_PATH . "/src/parts/pagination.php" ?>
     </div>
     <ol>
             <?php foreach ($users as $user): ?>
@@ -52,5 +52,5 @@ require_once \BASE_PATH . '/src/parts/header.php';
             <?php endforeach; ?>
     </ol>
 <?php
-require_once \BASE_PATH . '/src/parts/footer.php';
+require \BASE_PATH . '/src/parts/footer.php';
 ?>

@@ -1,11 +1,11 @@
 <?php
-define('BASE_PATH', dirname(__DIR__) . "/www");
+define('BASE_PATH',"/app");
 define("APP_URL", "http://localhost:8080/");
 define('REPORTS_PATH', \BASE_PATH . '/src/reports');
 
 // Database
 define('DB_HOST', 'db');
-define('DB_NAME', 'food_app_db');
+define('DB_NAME', 'test');
 define('DB_USER', 'root');
 define('DB_PASSWORD', 'root');
 

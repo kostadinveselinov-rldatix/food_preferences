@@ -1,7 +1,6 @@
 <?php
 require_once \BASE_PATH . "/bootstrap.php";
 
-require_once \BASE_PATH . "/src/ApiControllers/ApiUserController.php";
 use \App\ApiControllers\ApiUserController;
 use \App\Middleware\ParametersMiddleware;
 use \App\Middlewares\RateLimiter;
@@ -28,7 +27,8 @@ switch($uri){
                 if($limit <= 0) { $limit = 10; }
 
                 echo $controller->getUsersInBatches($offset, $limit);
-                die();
+                // die();
+                break;
             }
 
             echo $controller->index();
@@ -80,7 +80,8 @@ switch($uri){
                 if($id != $_POST["id"]){
                     http_response_code(400);
                     echo $controller->errorResponse('ID mismatch!', 400);
-                    die();
+                    // die();
+                    break;
                 }
             }
 
@@ -88,7 +89,6 @@ switch($uri){
         }
         
         break;
-
     case "/api/user/delete":
         $controller = $container->get(ApiUserController::class);
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -121,5 +121,3 @@ switch($uri){
         echo json_encode(['message' => 'Route not Found']);
         break;
 }
-
-die();

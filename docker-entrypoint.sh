@@ -8,4 +8,5 @@ set -e
 ./vendor/bin/doctrine-migrations migrate --no-interaction
 
 # Start Apache in the foreground
-exec apache2-foreground
+# exec apache2-foreground
+exec frankenphp run --config /config/Caddyfile

@@ -5,6 +5,7 @@
     <title>Add New User</title>
 </head>
 <body>
+    <?php  require \BASE_PATH . '/src/parts/navigation.php'; ?>
     <h1>Add New User</h1>
     <form action="/user/create" method="POST">
         <label for="name">Name:</label>
@@ -30,6 +31,6 @@
         <button type="submit" style="margin:5px;">Add User</button>
     </form>
 
-    <?php require_once \BASE_PATH . "/src/parts/printErrors.php";?>
+    <?php require \BASE_PATH . "/src/parts/printErrors.php";?>
 </body>
 </html>

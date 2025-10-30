@@ -1,56 +1,56 @@
 # Base PHP image with Apache
-FROM php:8.3-apache
+FROM dunglas/frankenphp:1-php8.3
 
 # Create a user with UID 1000 and GID 1000 (if not already exists)
 RUN groupadd -g 1000 appgroup && \
     useradd -m -u 1000 -g 1000 appuser
 
-# Copy Zscaler certificate
+# Copy Zscaler certificate and update certificates
 COPY Zscaler.pem /usr/local/share/ca-certificates/Zscaler.crt
+RUN update-ca-certificates
 
-RUN a2enmod rewrite
-
-# Set the correct document root in Apache config
-COPY ./docker/apache/vhost.conf /etc/apache2/sites-available/000-default.conf
-
-# Copy full app (including public/)
-COPY . /var/www
-
-# Set working directory inside the container
-WORKDIR /var/www
-
-# Install system dependencies
+# Install system dependencies and PHP extensions in fewer layers
 RUN apt-get update && apt-get install -y \
     unzip \
     git \
     curl \
     libzip-dev \
+    libxml2-dev \
     zip \
-    && docker-php-ext-install pdo pdo_mysql
-
-RUN update-ca-certificates
-
-RUN pecl install redis && docker-php-ext-enable redis \
-    && pecl install xdebug \
-    && docker-php-ext-enable xdebug 
-    
-RUN apt-get install -y libxml2-dev \
-    && docker-php-ext-install dom
-
-RUN docker-php-ext-install bcmath
-
-RUN docker-php-ext-install sockets
-
-COPY xdebug.ini /usr/local/etc/php/conf.d/
+    && docker-php-ext-install pdo pdo_mysql dom bcmath sockets \
+    && pecl install redis xdebug \
+    && docker-php-ext-enable redis xdebug \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-RUN composer install
+# Copy PHP configuration
+COPY xdebug.ini /usr/local/etc/php/conf.d/
 
-RUN chmod +x docker-entrypoint.sh && chmod +x wait-for-it.sh
-# Switch to that user (so PHP runs as appuser with UID 1000)
+# Set working directory
+WORKDIR /app
+
+# Copy dependency files first for better caching
+COPY composer.json composer.lock* ./
+
+# Install dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Copy application code
+COPY . .
+COPY ./config/ /config
+
+# Make scripts executable and create necessary directories
+RUN chmod +x docker-entrypoint.sh wait-for-it.sh \
+    && mkdir -p /app/src/reports
+
+# Switch to non-root user
 USER appuser
 
-RUN mkdir -p /var/www/src/reports
+# Configure FrankenPHP worker mode
+ENV FRANKENPHP_CONFIG="worker ./public/index.php"
 
+# Expose FrankenPHP default ports
+EXPOSE 80 443

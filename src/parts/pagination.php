@@ -1,30 +1,31 @@
 <?php
 
+// Only define function once
+if (!function_exists('buildQuery')) {
+    function buildQuery(array $overrides = []): string {
+        $params = array_merge($_GET, $overrides);
+        return '?' . http_build_query($params);
+    }
+}
+
+// Initialize variables only if not already set
 if (!isset($currentPage)) {
-    if(isset($_GET['page']))
-        $currentPage = (int)$_GET['page'];
-    else
-        $currentPage = 0;
+    $currentPage = isset($_GET['page']) ? (int)$_GET['page'] : 0;
 }
 
 if (!isset($pageSize)) {
-    if(isset($_GET['size']))
-        $pageSize = (int)$_GET['size'];
-    else
-        $pageSize = 10;
+    $pageSize = isset($_GET['size']) ? (int)$_GET['size'] : 10;
 }
 
-if (!isset($totalItems)) $totalItems = 0;
-if (!isset($pageSizeOptions)) $pageSizeOptions = [5,10, 20, 50, 100, 500, 1000,5000];
+if (!isset($totalItems)) {
+    $totalItems = 0;
+}
+
+if (!isset($pageSizeOptions)) {
+    $pageSizeOptions = [5, 10, 20, 50, 100, 500, 1000, 5000];
+}
 
 $totalPages = (int)ceil($totalItems / $pageSize);
-
-// Build query string helper
-function buildQuery(array $overrides = []) {
-    $params = array_merge($_GET, $overrides);
-    return '?' . http_build_query($params);
-}
-
 ?>
 
 <div>
